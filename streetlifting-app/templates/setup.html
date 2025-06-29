@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+{% extends "general/base.html" %} {% block title %}Configurar Datos Iniciales{%
+endblock %} {% block content %}
+<link rel="stylesheet" href="../static/style.css" />
+<div class="form-container">
+	<h1 style="text-align: center">Configurar Datos Iniciales</h1>
+	<p style="text-align: center">
+		¡Bienvenido! Configura tus datos iniciales para personalizar tu experiencia.
+	</p>
+	<style>
+		/* Estilo del formulario */
+		form {
+			max-width: 400px;
+			margin: auto;
+			padding: 20px;
+			border-radius: 10px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		}
+
+		label {
+			display: block;
+			margin-bottom: 8px;
+			font-weight: bold;
+		}
+
+		input[type="number"],
+		input[type="date"],
+		button {
+			width: 100%;
+			padding: 10px;
+			margin-bottom: 15px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+		}
+
+		button {
+			background: #4caf50;
+			color: white;
+			border: none;
+			cursor: pointer;
+		}
+
+		button:hover {
+			background: #388e3c;
+		}
+	</style>
+	<form method="POST" action="/setup">
+		<label for="name">Nombre:</label>
+		<input type="text" name="name" required />
+
+		<label for="age">Edad:</label>
+		<input type="number" name="age" required />
+
+		<label for="weight">Peso Corporal (kg):</label>
+		<input type="number" name="weight" step="0.1" required />
+
+		<label for="height">Altura (cm):</label>
+		<input type="number" name="height" step="0.1" required />
+
+		<label for="pull_up_rm">1RM Pull-up (kg):</label>
+		<input type="number" name="pull_up_rm" step="0.1" required />
+
+		<label for="dip_rm">1RM Weighted Dips (kg):</label>
+		<input type="number" name="dip_rm" step="0.1" required />
+
+		<label for="squat_rm">1RM Squat (kg):</label>
+		<input type="number" name="squat_rm" step="0.1" required />
+
+		<label for="muscle_up_rm">1RM Muscle-ups (kg):</label>
+		<input type="number" name="muscle_up_rm" step="0.1" required />
+
+		<button type="submit">Guardar Datos</button>
+	</form>
+
+	<!-- Nueva sección tras guardar -->
+	<div class="next-steps" style="margin-top: 20px; text-align: center">
+		<p>¿Quieres avanzar con la creación de un bloque o continuar sin él?</p>
+		<a href="/create-block" class="btn btn-primary" style="margin-right: 10px">
+			Crear un Bloque
+		</a>
+		<a href="/" class="btn btn-secondary"> Continuar sin Bloque </a>
+	</div>
+</div>
+{% endblock %}

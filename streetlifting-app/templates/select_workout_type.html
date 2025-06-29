@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+{% extends "general/base.html" %} {% block title %}Seleccionar Tipo de Entrenamiento{%
+endblock %} {% block content %}
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Seleccionar Tipo de Entrenamiento</title>
+		<link rel="stylesheet" href="../static/style.css" />
+		<style>
+			body {
+				background-color: #0d0d0d;
+				color: #e0e0e0;
+				font-family: "Roboto", Arial, sans-serif;
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			header {
+				background-color: #1a1a1a;
+				color: #ff6f61;
+				text-align: center;
+				padding: 20px;
+				border-bottom: 2px solid #ff6f61;
+			}
+
+			header a.back-button {
+				color: #ff6f61;
+				text-decoration: none;
+				font-weight: bold;
+				display: inline-block;
+				margin-bottom: 20px;
+			}
+
+			header a.back-button:hover {
+				color: #e65c50;
+			}
+
+			main {
+				max-width: 600px;
+				margin: 20px auto;
+				background-color: #1a1a1a;
+				padding: 20px;
+				border-radius: 10px;
+				box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+				text-align: center;
+			}
+
+			main h1 {
+				font-size: 2em;
+				color: #ff6f61;
+				margin-bottom: 20px;
+			}
+
+			main p {
+				font-size: 1em;
+				color: #cccccc;
+				margin-bottom: 20px;
+			}
+
+			form {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+
+			label {
+				font-size: 1.2em;
+				margin-bottom: 10px;
+				font-weight: bold;
+			}
+
+			select {
+				width: 100%;
+				padding: 10px;
+				margin-bottom: 20px;
+				border: 1px solid #333;
+				border-radius: 5px;
+				background-color: #333;
+				color: #e0e0e0;
+				font-size: 1em;
+			}
+
+			button {
+				padding: 10px 20px;
+				background-color: #ff6f61;
+				color: #fff;
+				border: none;
+				border-radius: 5px;
+				font-size: 1.2em;
+				cursor: pointer;
+				transition: background-color 0.3s ease;
+			}
+
+			button:hover {
+				background-color: #e65c50;
+			}
+		</style>
+	</head>
+	<body>
+			<h1>Seleccionar Tipo de Entrenamiento</h1>
+			{% if selected_date %}
+			<p>Fecha seleccionada: {{ selected_date }}</p>
+			{% endif %}
+			<form method="POST">
+				<label for="day_type">Selecciona el tipo de entrenamiento:</label>
+				<select name="day_type" id="day_type">
+					<option value="" disabled selected>--Seleccionar--</option>
+					{% for day_type in available_day_types %}
+					<option value="{{ day_type }}">{{ day_type }}</option>
+					{% endfor %}
+				</select>
+				<button type="submit">Confirmar</button>
+			</form>
+		</main>
+	</body>
+</html>
+{% endblock %}

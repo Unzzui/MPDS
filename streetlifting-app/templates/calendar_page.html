@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+{% extends "general/base.html" %}
+{% block title %}Calendario de Entrenamiento{% endblock %}
+{% block content %}
+<html lang="en">
+	<head>
+
+		<!-- Stylesheets -->
+		<link rel="stylesheet" href="/static/style.css" />
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+		/>
+
+		<!-- JavaScript -->
+	</head>
+	<body>
+
+
+		<title>Calendario de Entrenamiento</title>
+		<script src="../static/js/calendar.js" defer></script>
+		<script src="../static/js/progressBlock.js" defer></script>
+		<link rel="stylesheet" href="../static/style.css" />
+		<style>
+		
+			/* Estilos para el calendario de entrenamiento */
+			#calendar-controls {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-top: 10px;
+			}
+		
+			#calendar-controls button {
+				padding: 10px 20px;
+				background-color: #ff6f61;
+				color: #fff;
+				border: none;
+				border-radius: 5px;
+				cursor: pointer;
+				transition: background-color 0.3s ease;
+			}
+		
+			#calendar-controls button:hover {
+				background-color: #e65c50;
+			}
+		
+			#current-month {
+				font-size: 1.5em;
+				font-weight: bold;
+			}
+		
+			.calendar-table {
+				width: 100%;
+				border-collapse: collapse;
+				margin-top: 20px;
+			}
+		
+			.calendar-table th,
+			.calendar-table td {
+				border: 1px solid #333;
+				padding: 10px;
+				text-align: center;
+			}
+		
+			.calendar-table th {
+				background-color: #333;
+				color: #fff;
+			}
+		
+			.calendar-table td {
+				background-color: #1a1a1a;
+				color: #e0e0e0;
+			}
+		
+			.calendar-table .inactive {
+				background-color: #2e2e2e;
+				color: #888;
+			}
+		
+			.calendar-table .upcoming {
+				background-color: #444;
+				color: #bbb;
+				cursor: pointer;
+			}
+		
+			.calendar-table .upcoming:hover {
+				background-color: #555;
+				color: #fff;
+			}
+		
+			.calendar-table .completed {
+				background-color: #4caf50;
+				color: #fff;
+				font-weight: bold;
+				cursor: pointer;
+			}
+		
+			.calendar-table .completed:hover {
+				background-color: #45a049;
+				box-shadow: 0 0 5px 2px #4caf50;
+			}
+		
+			.calendar-table .current-day {
+				background-color: #1e90ff;
+				color: #fff;
+				font-weight: bold;
+				border: 2px solid #1c86ee;
+				cursor: pointer;
+			}
+		
+			.calendar-table .current-day:hover {
+				background-color: #1c86ee;
+				box-shadow: 0 0 5px 2px #1e90ff;
+			}
+		
+			#day-details {
+				margin-top: 20px;
+				padding: 20px;
+				background-color: #1a1a1a;
+				border-radius: 10px;
+				box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+			}
+		
+			#day-details.hidden {
+				display: none;
+			}
+		
+			#day-details h2 {
+				font-size: 1.8em;
+				color: #ff6f61;
+				margin-bottom: 10px;
+			}
+		
+			#day-details p {
+				font-size: 1em;
+				color: #cccccc;
+				margin-bottom: 10px;
+			}
+		
+			#close-details {
+				padding: 10px 20px;
+				background-color: #ff6f61;
+				color: #fff;
+				border: none;
+				border-radius: 5px;
+				cursor: pointer;
+				transition: background-color 0.3s ease;
+			}
+		
+			#close-details:hover {
+				background-color: #e65c50;
+			}
+		
+			/* Responsive Design */
+			@media (max-width: 768px) {
+			
+				.calendar-table th,
+				.calendar-table td {
+					padding: 5px;
+				}
+		
+				#day-details {
+					padding: 15px;
+				}
+		
+				#day-details h2 {
+					font-size: 1.5em;
+				}
+		
+				#day-details p {
+					font-size: 0.9em;
+				}
+			}
+		
+			@media (max-width: 480px) {
+				
+
+				.calendar-table th,
+				.calendar-table td {
+					padding: 5px;
+				}
+		
+				#day-details {
+					padding: 10px;
+				}
+		
+				#day-details h2 {
+					font-size: 1.2em;
+				}
+		
+				#day-details p {
+					font-size: 0.8em;
+				}
+			}
+			@media (max-width: 430px) {
+				.calendar-table th,
+				.calendar-table td {
+					max-width: 100%;
+					padding: 1px;
+				}
+		
+				#day-details {
+					padding: 5px;
+				}
+		
+				#day-details h2 {
+					font-size: 1em;
+				}
+		
+				#day-details p {
+					font-size: 0.7em;
+				}
+			}
+			@media (max-width: 390px) {
+				.calendar-table th,
+				.calendar-table td {
+					max-width: 50px;
+					padding: 2px;
+				}
+		
+				#day-details {
+					padding: 5px;
+				}
+		
+				#day-details h2 {
+					font-size: 1em;
+				}
+		
+				#day-details p {
+					font-size: 0.7em;
+				}
+			}
+		</style>
+	</head>
+	<body>
+   <!-- Contenedor de la barra de progreso del bloque de entrenamiento -->
+		<div id="training-block-info" class="hidden">
+			<h2>Progreso del Bloque de Entrenamiento</h2>
+			<p>Etapa Actual: <span id="current-stage"></span></p>
+			<p>Semana Actual: <span id="current-week"></span> de <span id="total-weeks"></span></p>
+			<div class="progress-bar-container">
+				<div id="progress" class="progress-bar"></div>
+			</div>
+		</div>
+		<div id="no-block-info" class="hidden">
+			<p>No hay bloques de entrenamiento activos en este momento.</p>
+		</div>		
+		<div class="calendar-container">
+			<header>
+				<h1>Calendario de Entrenamiento</h1>
+				<div id="calendar-controls">
+					<button id="prev-month">← Mes Anterior</button>
+					<span id="current-month">Enero 2024</span>
+					<button id="next-month">Mes Siguiente →</button>
+				</div>
+			</header>
+			<main>
+				<div id="calendar">
+					<table class="calendar-table">
+						<thead>
+							<tr>
+								<th>Lun</th>
+								<th>Mar</th>
+								<th>Mié</th>
+								<th>Jue</th>
+								<th>Vie</th>
+								<th>Sáb</th>
+								<th>Dom</th>
+							</tr>
+						</thead>
+						<tbody id="calendar-body">
+							<!-- Aquí se insertarán las filas del calendario -->
+						</tbody>
+					</table>
+				</div>
+				<div id="day-details" class="hidden">
+					<h2>Detalles del Día</h2>
+					<div id="day-info"></div>
+					<button id="close-details">Cerrar</button>
+				</div>
+			</main>
+		</div>
+	
+	</body>
+</html>
+{% endblock %}

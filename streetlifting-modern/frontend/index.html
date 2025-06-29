@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/icons/icon-192x192.svg" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#00ff88" />
+    <meta
+      name="description"
+      content="MPDS Streetlifting - Progressive Web App para tracking de entrenamientos" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="MPDS" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="msapplication-TileColor" content="#00ff88" />
+    <meta name="msapplication-TileImage" content="/icons/icon-144x144.svg" />
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.svg" />
+    <link
+      rel="apple-touch-icon"
+      sizes="152x152"
+      href="/icons/icon-152x152.svg" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/icons/icon-180x180.svg" />
+    <link
+      rel="apple-touch-icon"
+      sizes="167x167"
+      href="/icons/icon-167x167.svg" />
+
+    <!-- Splash Screen Images for iOS -->
+    <link
+      rel="apple-touch-startup-image"
+      href="/splash/apple-splash-2048-2732.svg"
+      media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)" />
+    <link
+      rel="apple-touch-startup-image"
+      href="/splash/apple-splash-1668-2388.svg"
+      media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)" />
+    <link
+      rel="apple-touch-startup-image"
+      href="/splash/apple-splash-1536-2048.svg"
+      media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)" />
+    <link
+      rel="apple-touch-startup-image"
+      href="/splash/apple-splash-1125-2436.svg"
+      media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" />
+    <link
+      rel="apple-touch-startup-image"
+      href="/splash/apple-splash-1242-2688.svg"
+      media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)" />
+    <link
+      rel="apple-touch-startup-image"
+      href="/splash/apple-splash-750-1334.svg"
+      media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" />
+    <link
+      rel="apple-touch-startup-image"
+      href="/splash/apple-splash-640-1136.svg"
+      media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" />
+
+    <!-- iOS specific meta tags -->
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet" />
+
+    <title>MPDS Streetlifting</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+
+    <!-- PWA Service Worker Registration -->
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("/sw.js")
+            .then((registration) => {
+              console.log("SW registered: ", registration);
+            })
+            .catch((registrationError) => {
+              console.log("SW registration failed: ", registrationError);
+            });
+        });
+      }
+
+      // Install prompt for PWA
+      let deferredPrompt;
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+
+        // Show install button or notification
+        const installButton = document.getElementById("install-button");
+        if (installButton) {
+          installButton.style.display = "block";
+          installButton.addEventListener("click", () => {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+              if (choiceResult.outcome === "accepted") {
+                console.log("User accepted the install prompt");
+              } else {
+                console.log("User dismissed the install prompt");
+              }
+              deferredPrompt = null;
+              installButton.style.display = "none";
+            });
+          });
+        }
+      });
+
+      // App installed event
+      window.addEventListener("appinstalled", (evt) => {
+        console.log("App was installed");
+      });
+    </script>
+  </body>
+</html>

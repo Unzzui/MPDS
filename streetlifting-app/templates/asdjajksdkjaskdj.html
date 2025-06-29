@@ -1,0 +1,297 @@
+<script>
+	document.addEventListener("DOMContentLoaded", async () => {
+		let debounceTimer; // Temporizador para debounce
+		const debounceDelay = 500; // Tiempo de espera en milisegundos
+		// Función para reemplazar espacios, paréntesis, etc.
+		function toSafeName(name) {
+			return name
+				.replace(/\(/g, "") // quita "("
+				.replace(/\)/g, "") // quita ")"
+				.replace(/\s+/g, "_"); // reemplaza espacios con _
+		}
+
+		const workoutForm = document.querySelector("form");
+		const saveProgressEndpoint = "/save-workout-progress";
+		const loadProgressEndpoint = "/load-workout-progress";
+		const setContainer = document.getElementById("set-container");
+		let predefinedExercises = [];
+		let isFormInitialized = false; // Validación para evitar guardar datos antes de que se genere todo
+
+		// Guardar progreso (via fetch)
+		window.saveProgress = () => {
+			if (!isFormInitialized) {
+				console.log("Formulario aún no inicializado. Esperando...");
+				return; // Salir si el formulario no está completamente generado
+			}
+
+			const jsonData = { exercises: [] };
+
+			setContainer
+				.querySelectorAll(".exercise-container")
+				.forEach((exerciseDiv) => {
+					const safeName = exerciseDiv.id.replace("exercise_", "");
+					const sets = [];
+
+					exerciseDiv
+						.querySelectorAll(`#sets_${safeName} tr`)
+						.forEach((row) => {
+							const weight =
+								row.querySelector(`[name="weight_${safeName}[]"]`)?.value || "";
+							const reps =
+								row.querySelector(`[name="reps_${safeName}[]"]`)?.value || "";
+							const rpe =
+								row.querySelector(`[name="rpe_${safeName}[]"]`)?.value || "";
+							const notes =
+								row.querySelector(`[name="notes_${safeName}[]"]`)?.value || "";
+							const completed =
+								row.querySelector(`[name="completed_${safeName}[]"]`)
+									?.checked || false;
+
+							sets.push({ weight, reps, rpe, notes, completed });
+						});
+
+					jsonData.exercises.push({ name: safeName, sets });
+				});
+
+			console.log("Datos enviados:", jsonData);
+			fetch(saveProgressEndpoint, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(jsonData),
+			}).catch((err) => console.error("Error al guardar progreso:", err));
+		};
+
+		// Reconstruir ejercicios (si hay data pendiente)
+		const rebuildExercises = (exercises) => {
+			setContainer.innerHTML = "";
+
+			exercises.forEach((exercise) => {
+				// Convertimos el "exercise.name" a un safeName
+				const safeName = toSafeName(exercise.name);
+				const exerciseContainer = document.createElement("div");
+				exerciseContainer.id = `exercise_${safeName}`;
+				exerciseContainer.className = "exercise-container";
+
+				// Agregamos el input hidden para el submit
+				// (para que el backend reciba exercise_names = safeName)
+				const hiddenInput = document.createElement("input");
+				hiddenInput.type = "hidden";
+				hiddenInput.name = "exercise_names";
+				hiddenInput.value = safeName;
+				exerciseContainer.appendChild(hiddenInput);
+
+				exerciseContainer.innerHTML += `
+    <div class="exercise-header">
+      <h4>${safeName}</h4>
+      <button class="btn-secondary" type="button" onclick="removeExercise('${safeName}')">
+        Eliminar Ejercicio
+      </button>
+    </div>
+    <table class="exercise-table">
+      <thead>
+        <tr>
+          <th>Peso (kg)</th>
+          <th>Reps</th>
+          <th>RPE</th>
+          <th>Notas</th>
+          <th>Finish?</th>
+          <th>Borrar</th>
+        </tr>
+      </thead>
+      <tbody id="sets_${safeName}"></tbody>
+    </table>
+    <button class="btn" type="button" onclick="addSet('${safeName}')">Agregar Serie</button>
+  `;
+
+				setContainer.appendChild(exerciseContainer);
+
+				const tbody = document.getElementById(`sets_${safeName}`);
+				if (!exercise.sets || exercise.sets.length === 0) {
+					addSet(safeName);
+				} else {
+					exercise.sets.forEach((set) => {
+						const row = document.createElement("tr");
+						row.innerHTML = `
+        <td><input type="number" name="weight_${safeName}[]" value="${
+							set.weight || ""
+						}" step="0.1" required /></td>
+        <td><input type="number" name="reps_${safeName}[]" value="${
+							set.reps || ""
+						}" required /></td>
+        <td><input type="number" name="rpe_${safeName}[]" value="${
+							set.rpe || ""
+						}" step="0.1" /></td>
+        <td><input type="text" name="notes_${safeName}[]" value="${
+							set.notes || ""
+						}" /></td>
+        <td><input type="checkbox" name="completed_${safeName}[]" value="true" ${
+							set.completed ? "checked" : ""
+						} /></td>
+        <td><button type="button" class="btn" onclick="this.closest('tr').remove()">Serie</button></td>
+      `;
+						tbody.appendChild(row);
+					});
+				}
+
+				exerciseContainer.querySelectorAll("input, select").forEach((input) => {
+					input.addEventListener("input", window.saveProgress);
+					input.addEventListener("change", window.saveProgress);
+				});
+			});
+		};
+
+		// Carga de progreso pendiente (si existe)
+		try {
+			const response = await fetch(loadProgressEndpoint);
+			if (response.ok) {
+				const data = await response.json();
+				if (data.pending) {
+					rebuildExercises(data.formData.exercises || []);
+				} else {
+					rebuildExercises([{ name: "Pull_Up", sets: [] }]);
+				}
+			}
+			isFormInitialized = true; // Activar la validación una vez generado todo
+		} catch (error) {
+			console.error("Error al cargar progreso:", error);
+		}
+
+		// Guardar en vivo al cambiar
+		workoutForm.addEventListener("input", window.saveProgress);
+		workoutForm.addEventListener("change", window.saveProgress);
+
+		// Cancelar entrenamiento
+		document.getElementById("cancel-workout").addEventListener("click", () => {
+			if (confirm("¿Estás seguro de que deseas cancelar el entrenamiento?")) {
+				fetch("/cancel-workout", { method: "POST" })
+					.then(() => (window.location.href = "/"))
+					.catch((err) =>
+						console.error("Error al cancelar entrenamiento:", err)
+					);
+			}
+		});
+
+		// Carga lista de ejercicios predefinidos
+		try {
+			const response = await fetch("../static/utils/exercises.json");
+			if (!response.ok) {
+				throw new Error(`Error ${response.status}: ${response.statusText}`);
+			}
+			predefinedExercises = await response.json();
+
+			const selector = document.getElementById("exercise-selector");
+			predefinedExercises.forEach((exercise) => {
+				const safeName = toSafeName(exercise);
+				const option = document.createElement("option");
+				option.value = safeName;
+				option.textContent = exercise; // Ej: "Barbell Curl (EZ Bar)"
+				selector.appendChild(option);
+			});
+		} catch (error) {
+			console.error("Error al cargar ejercicios:", error.message);
+			alert("Hubo un error al cargar los ejercicios. Inténtalo de nuevo.");
+		}
+
+		// Agregar un ejercicio nuevo (botón "Agregar Ejercicio")
+		document
+			.getElementById("add-exercise-btn")
+			.addEventListener("click", () => {
+				const selector = document.getElementById("exercise-selector");
+				const selectedSafeName = selector.value;
+
+				if (!selectedSafeName) {
+					alert("Selecciona un ejercicio.");
+					return;
+				}
+
+				if (document.getElementById(`exercise_${selectedSafeName}`)) {
+					alert("Este ejercicio ya fue agregado.");
+					return;
+				}
+
+				// Crear contenedor
+				const exerciseContainer = document.createElement("div");
+				exerciseContainer.id = `exercise_${selectedSafeName}`;
+				exerciseContainer.className = "exercise-container";
+
+				// Input hidden para que el backend reciba "exercise_names"
+				const hiddenInput = document.createElement("input");
+				hiddenInput.type = "hidden";
+				hiddenInput.name = "exercise_names";
+				hiddenInput.value = selectedSafeName;
+				exerciseContainer.appendChild(hiddenInput);
+
+				// Resto del HTML
+				exerciseContainer.innerHTML += `
+  <div class="exercise-header">
+    <h4>${selectedSafeName}</h4>
+    <button class="btn-secondary" type="button" onclick="removeExercise('${selectedSafeName}')">
+      Eliminar Ejercicio
+    </button>
+  </div>
+  <table class="exercise-table">
+    <thead>
+      <tr>
+        <th>Peso (kg)</th>
+        <th>Reps</th>
+        <th>RPE</th>
+        <th>Notas</th>
+        <th>¿Finish?</th>
+        <th>Borrar</th>
+      </tr>
+    </thead>
+    <tbody id="sets_${selectedSafeName}">
+      <tr>
+        <td><input type="number" name="weight_${selectedSafeName}[]" step="0.1" required /></td>
+        <td><input type="number" name="reps_${selectedSafeName}[]" required /></td>
+        <td><input type="number" name="rpe_${selectedSafeName}[]" step="0.1" /></td>
+        <td><input type="text" name="notes_${selectedSafeName}[]" /></td>
+        <td><input type="checkbox" name="completed_${selectedSafeName}[]" value="true" checked /></td>
+        <td><button class="btn" type="button" onclick="this.closest('tr').remove()">Serie</button></td>
+      </tr>
+    </tbody>
+  </table>
+  <button class="btn" type="button" onclick="addSet('${selectedSafeName}')">
+    Agregar Serie
+  </button>
+`;
+				setContainer.appendChild(exerciseContainer);
+
+				// Listeners
+				exerciseContainer.querySelectorAll("input, select").forEach((input) => {
+					input.addEventListener("input", window.saveProgress);
+					input.addEventListener("change", window.saveProgress);
+				});
+
+				// Guardar de inmediato
+				window.saveProgress();
+			});
+	});
+
+	// Funciones globales
+	function addSet(safeName) {
+		const tbody = document.getElementById(`sets_${safeName}`);
+		const row = document.createElement("tr");
+		row.innerHTML = `
+<td><input type="number" name="weight_${safeName}[]" step="0.1" required /></td>
+<td><input type="number" name="reps_${safeName}[]" required /></td>
+<td><input type="number" name="rpe_${safeName}[]" step="0.1" /></td>
+<td><input type="text" name="notes_${safeName}[]" /></td>
+<td><input type="checkbox" name="completed_${safeName}[]" value="true" checked /></td>
+<td><button type="button" class="btn" onclick="this.closest('tr').remove()">Serie</button></td>
+`;
+		tbody.appendChild(row);
+
+		row.querySelectorAll("input, select").forEach((input) => {
+			input.addEventListener("input", window.saveProgress);
+			input.addEventListener("change", window.saveProgress);
+		});
+
+		window.saveProgress();
+	}
+
+	function removeExercise(safeName) {
+		document.getElementById(`exercise_${safeName}`).remove();
+		window.saveProgress();
+	}
+</script>

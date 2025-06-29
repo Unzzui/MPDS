@@ -1,0 +1,124 @@
+{% extends "general/base.html" %} {% block title %}Editar Datos Iniciales{%
+endblock %} {% block content %}
+<div class="edit-user-data-container">
+	<h1>Editar Datos Iniciales</h1>
+	<form method="POST">
+		<label for="name">Nombre:</label>
+		<input type="text" name="name" value="{{ user_data.name }}" required />
+
+		<label for="age">Edad:</label>
+		<input type="number" name="age" value="{{ user_data.age }}" required />
+
+		<label for="weight">Peso Corporal (kg):</label>
+		<input
+			type="number"
+			name="weight"
+			step="0.1"
+			value="{{ user_data.weight }}"
+			required
+		/>
+
+		<label for="height">Altura (cm):</label>
+		<input
+			type="number"
+			name="height"
+			step="0.1"
+			value="{{ user_data.height }}"
+			required
+		/>
+
+		<label for="pull_up_rm">1RM Pull-up (kg):</label>
+		<input
+			type="number"
+			name="pull_up_rm"
+			step="0.1"
+			value="{{ initial_rm.pull_up_rm }}"
+			required
+		/>
+
+		<label for="dip_rm">1RM Weighted Dips (kg):</label>
+		<input
+			type="number"
+			name="dip_rm"
+			step="0.1"
+			value="{{ initial_rm.dip_rm }}"
+			required
+		/>
+
+		<label for="squat_rm">1RM Back Squat (kg):</label>
+		<input
+			type="number"
+			name="squat_rm"
+			step="0.1"
+			value="{{ initial_rm.squat_rm }}"
+			required
+		/>
+
+		<label for="muscle_up_rm">1RM Muscle-ups (kg):</label>
+		<input
+			type="number"
+			name="muscle_up_rm"
+			step="0.1"
+			value="{{ initial_rm.muscle_up_rm }}"
+			required
+		/>
+
+		<button type="submit" class="btn btn-save">Guardar Cambios</button>
+	</form>
+</div>
+
+<!-- CSS para dar estilo al diseño -->
+<style>
+	.edit-user-data-container {
+		max-width: 600px;
+		margin: 0 auto;
+		padding: 20px;
+		background-color: #1a1a1a;
+		border-radius: 10px;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+		color: #f0f0f0;
+	}
+
+	.edit-user-data-container h1 {
+		text-align: center;
+		font-size: 2rem;
+		margin-bottom: 20px;
+		color: #ff6f61;
+	}
+
+	.edit-user-data-container label {
+		display: block;
+		font-size: 1.2em;
+		margin-bottom: 5px;
+		color: #e0e0e0;
+	}
+
+	.edit-user-data-container input {
+		width: 100%;
+		padding: 10px;
+		font-size: 1em;
+		margin-bottom: 20px;
+		border: 1px solid #333;
+		border-radius: 5px;
+		background-color: #333;
+		color: #e0e0e0;
+	}
+
+	.btn-save {
+		display: block;
+		width: 100%;
+		padding: 10px;
+		font-size: 1.2em;
+		border: none;
+		border-radius: 5px;
+		background-color: #007bff;
+		color: white;
+		cursor: pointer;
+		transition: background-color 0.3s ease;
+	}
+
+	.btn-save:hover {
+		background-color: #0056b3;
+	}
+</style>
+{% endblock %}

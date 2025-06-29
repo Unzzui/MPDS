@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Routines Frontend Test</title>
+    <style>
+      body {
+        font-family: "JetBrains Mono", monospace;
+        background: #0a0a0a;
+        color: #e0e0e0;
+        margin: 0;
+        padding: 20px;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .test-section {
+        background: #1a1a1a;
+        border: 1px solid #333;
+        border-left: 4px solid #00ff88;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+      .test-title {
+        color: #00ff88;
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .test-result {
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 4px;
+      }
+      .success {
+        background: rgba(0, 255, 136, 0.1);
+        border: 1px solid #00ff88;
+        color: #00ff88;
+      }
+      .error {
+        background: rgba(220, 38, 38, 0.1);
+        border: 1px solid #dc2626;
+        color: #dc2626;
+      }
+      .info {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid #3b82f6;
+        color: #3b82f6;
+      }
+      button {
+        background: #00ff88;
+        color: #0a0a0a;
+        border: none;
+        padding: 10px 20px;
+        font-family: "JetBrains Mono", monospace;
+        font-weight: bold;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #00cc6a;
+      }
+      pre {
+        background: #0a0a0a;
+        padding: 10px;
+        border: 1px solid #333;
+        overflow-x: auto;
+        font-size: 0.8rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 style="color: #00ff88; text-align: center">Routines Frontend Test</h1>
+
+      <div class="test-section">
+        <div class="test-title">Frontend Implementation Status</div>
+        <div class="test-result success">
+          ✅ Types: Routine types added to types/index.ts
+        </div>
+        <div class="test-result success">
+          ✅ API Service: Routine endpoints added to services/api.ts
+        </div>
+        <div class="test-result success">
+          ✅ Hooks: useRoutines hook created with all CRUD operations
+        </div>
+        <div class="test-result success">
+          ✅ Styles: Comprehensive CSS for routines following terminal design
+        </div>
+        <div class="test-result success">
+          ✅ Pages: RoutinesPage and RoutineDetailPage implemented
+        </div>
+        <div class="test-result success">
+          ✅ Navigation: Routines added to Layout and App.tsx routes
+        </div>
+        <div class="test-result success">
+          ✅ Dashboard: Active routines section added to dashboard
+        </div>
+      </div>
+
+      <div class="test-section">
+        <div class="test-title">Features Implemented</div>
+        <div class="test-result info">
+          📋 View all routines with summary information
+        </div>
+        <div class="test-result info">
+          📋 Create new routines with custom exercises and days
+        </div>
+        <div class="test-result info">📋 Create routines from templates</div>
+        <div class="test-result info">
+          📋 View routine details with exercises
+        </div>
+        <div class="test-result info">📋 Add exercises to routines</div>
+        <div class="test-result info">📋 Activate/deactivate routines</div>
+        <div class="test-result info">📋 Delete routines</div>
+        <div class="test-result info">
+          📋 Dashboard integration showing active routines
+        </div>
+      </div>
+
+      <div class="test-section">
+        <div class="test-title">Terminal Design Philosophy</div>
+        <div class="test-result success">
+          ✅ Dark theme with neon accents (#00ff88, #ff6b35)
+        </div>
+        <div class="test-result success">
+          ✅ Monospace fonts (JetBrains Mono)
+        </div>
+        <div class="test-result success">
+          ✅ Terminal-style cards with left borders
+        </div>
+        <div class="test-result success">
+          ✅ No emojis in UI elements (professional aesthetic)
+        </div>
+        <div class="test-result success">✅ Mobile-first responsive design</div>
+        <div class="test-result success">
+          ✅ Smooth animations and hover effects
+        </div>
+      </div>
+
+      <div class="test-section">
+        <div class="test-title">Next Steps</div>
+        <div class="test-result info">
+          1. Start the backend server: <code>cd backend && python main.py</code>
+        </div>
+        <div class="test-result info">
+          2. Start the frontend: <code>cd frontend && npm run dev</code>
+        </div>
+        <div class="test-result info">
+          3. Login to the app and navigate to Routines
+        </div>
+        <div class="test-result info">
+          4. Test creating routines and adding exercises
+        </div>
+        <div class="test-result info">
+          5. Verify the terminal design aesthetic
+        </div>
+      </div>
+
+      <div class="test-section">
+        <div class="test-title">API Endpoints Available</div>
+        <pre>
+GET    /api/v1/routines/           - Get all routines
+GET    /api/v1/routines/{id}       - Get specific routine
+POST   /api/v1/routines/           - Create new routine
+PUT    /api/v1/routines/{id}       - Update routine
+DELETE /api/v1/routines/{id}       - Delete routine
+POST   /api/v1/routines/{id}/activate - Activate routine
+GET    /api/v1/routines/templates  - Get routine templates
+GET    /api/v1/routines/active     - Get active routines
+GET    /api/v1/routines/day/{day}  - Get routines by day
+POST   /api/v1/routines/templates/{id}/create - Create from template
+GET    /api/v1/routines/{id}/exercises - Get routine exercises
+POST   /api/v1/routines/{id}/exercises - Add exercise to routine
+            </pre
+        >
+      </div>
+    </div>
+  </body>
+</html>

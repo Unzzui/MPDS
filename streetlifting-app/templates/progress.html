@@ -1,0 +1,137 @@
+{% extends "general/base.html" %} {% block title %} Progreso {% endblock %} {%
+block content %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Progreso</title>
+		<link rel="stylesheet" href="/static/style.css" />
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+		<script src="/static/js/progressCharts.js" defer></script>
+		<script src="/static/js/volumeChart.js" defer></script>
+		<script src="/static/js/frequencyChart.js" defer></script>
+		<script src="/static/js/exerciseDistributionChart.js" defer></script>
+		<script id="volumeChartData" type="application/json">
+			{{ volume_chart_data | default({}) | tojson }}
+		</script>
+		<script id="frequencyChartData" type="application/json">
+			{{ frequency_map | default({}) | tojson }}
+		</script>
+		<script id="rmRecordsData" type="application/json">
+			{{ records | tojson }}
+		</script>
+		<script id="exerciseDistributionData" type="application/json">
+			{{ exercise_distribution | default({}) | tojson }}
+		</script>
+		<style>
+			.chart-container {
+				width: 100%;
+				margin: 0 auto;
+			}
+
+			canvas {
+				width: 100% !important;
+				height: auto !important;
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<h1>Progreso</h1>
+
+			<!-- Gráficos -->
+			<section class="chart-section">
+				<!-- Evolución del 1RM -->
+				{% if records | length > 0 %}
+				<div class="chart-container">
+					<h2>Evolución del 1RM</h2>
+					<canvas id="progressChart"></canvas>
+					<p>
+						Este gráfico muestra la evolución de tu 1RM (Repetición Máxima) en
+						diferentes ejercicios a lo largo del tiempo. Te ayuda a visualizar
+						tu progreso en fuerza.
+					</p>
+				</div>
+				{% else %}
+				<div class="chart-container">
+					<h2>Evolución del 1RM</h2>
+					<p>No hay datos suficientes para mostrar el gráfico de 1RM.</p>
+				</div>
+				{% endif %}
+
+				<!-- Volumen Total Cargado -->
+				{% if volume_chart_data | length > 0 %}
+				<div class="chart-container">
+					<h2>Volumen Total Cargado</h2>
+					<canvas id="volumeChart"></canvas>
+					<p>
+						Este gráfico muestra el volumen total de peso levantado en cada
+						sesión de entrenamiento. Te ayuda a monitorear la carga total de
+						trabajo que estás realizando.
+					</p>
+				</div>
+				{% else %}
+				<div class="chart-container">
+					<h2>Volumen Total Cargado</h2>
+					<p>
+						No hay datos suficientes para mostrar el gráfico de Volumen Total
+						Cargado.
+					</p>
+				</div>
+				{% endif %}
+
+				<!-- Frecuencia de Entrenamiento -->
+				{% if frequency_map | length > 0 %}
+				<div class="chart-container">
+					<h2>Frecuencia de Entrenamiento</h2>
+					<canvas id="frequencyChart"></canvas>
+					<p>
+						Este gráfico muestra la frecuencia con la que realizas diferentes
+						ejercicios. Te ayuda a identificar qué ejercicios estás haciendo con
+						más frecuencia.
+					</p>
+				</div>
+				{% else %}
+				<div class="chart-container">
+					<h2>Frecuencia de Entrenamiento</h2>
+					<p>
+						No hay datos suficientes para mostrar el gráfico de Frecuencia de
+						Entrenamiento.
+					</p>
+				</div>
+				{% endif %}
+
+				<!-- Distribución de Ejercicios -->
+				{% if exercise_distribution | length > 0 %}
+				<div class="chart-container">
+					<h2>Distribución de Ejercicios</h2>
+					<canvas id="exerciseDistributionChart"></canvas>
+					<p>
+						Este gráfico muestra la distribución de los diferentes tipos de
+						ejercicios realizados en tus entrenamientos. Te ayuda a ver qué
+						ejercicios son más comunes en tu rutina.
+					</p>
+				</div>
+				{% else %}
+				<div class="chart-container">
+					<h2>Distribución de Ejercicios</h2>
+					<p>
+						No hay datos suficientes para mostrar el gráfico de Distribución de
+						Ejercicios.
+					</p>
+				</div>
+				{% endif %}
+			</section>
+
+			<!-- Botón para ver registros -->
+			<div class="button-container">
+				<a href="/records">
+					<button class="btn">Ver Registros</button>
+				</a>
+			</div>
+		</main>
+	</body>
+</html>
+{% endblock %}

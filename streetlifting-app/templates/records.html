@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+{% extends "general/base.html" %} {% block title %}Gestión de Registros{% endblock %} {%
+block content %}
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Gestión de Registros</title>
+		<link rel="stylesheet" href="/static/style.css" />
+		<style>
+			form {
+				background-color: #1a1a1a;
+				padding: 20px;
+				border-radius: 10px;
+				margin-bottom: 20px;
+			}
+
+			.form-inline {
+				display: flex;
+				flex-direction: column;
+				margin-bottom: 15px;
+			}
+
+			.form-inline label {
+				font-size: 1.2em;
+				margin-bottom: 5px;
+				font-weight: bold;
+			}
+
+			.form-inline input {
+				background-color: #333;
+				color: #e0e0e0;
+				border: 1px solid #555;
+				padding: 10px;
+				border-radius: 5px;
+				font-size: 1em;
+				width: 100%;
+			}
+
+			.form-inline input:focus {
+				outline: none;
+				border-color: #ff6f61;
+			}
+
+			.btn-add {
+				background-color: #ff6f61;
+				color: white;
+				border: none;
+				padding: 10px 20px;
+				cursor: pointer;
+				border-radius: 5px;
+				font-size: 1em;
+				transition: background-color 0.3s ease;
+			}
+
+			.btn-add {
+				margin-top: 20px;
+				width: 100%;
+			}
+
+			.btn-delete {
+				background-color: #e53935;
+			}
+
+			.btn-edit:hover,
+			.btn-add:hover,
+			.btn-delete:hover {
+				background-color: #e65c50;
+			}
+
+			table {
+				border-collapse: collapse;
+				margin-top: 20px;
+				background-color: #1a1a1a;
+				border-radius: 10px;
+			}
+
+			.table th,
+			.table td {
+				border: 1px solid #ddd;
+				padding: 8px;
+				text-align: center;
+			}
+
+			.confirmation {
+				color: #ff6f61;
+				font-weight: bold;
+			}
+			.table-responsive {
+				overflow-x: auto;
+				-webkit-overflow-scrolling: touch; /* Para un desplazamiento suave en dispositivos móviles */
+			}
+
+			.table-responsive table {
+				width: 100%;
+			}
+
+			/* Ajustes adicionales para pantallas pequeñas */
+			@media (max-width: 768px) {
+				.table-responsive table {
+					font-size: 0.8em;
+				}
+			}
+
+			@media (max-width: 430px) {
+				.table-responsive table {
+					font-size: 0.7em;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Gestión de Registros</h1>
+
+		<!-- Formulario para agregar un nuevo registro -->
+		<form action="{{ url_for('records.add_record') }}" method="POST">
+			<h2>Agregar Nuevo Registro</h2>
+			<div class="form-inline">
+				<label for="date">Fecha:</label>
+				<input type="date" id="date" name="date" required />
+			</div>
+			<div class="form-inline">
+				<label for="pull_up_rm">1RM Pull-up:</label>
+				<input
+					type="number"
+					id="pull_up_rm"
+					name="pull_up_rm"
+					step="0.1"
+					required
+				/>
+			</div>
+			<div class="form-inline">
+				<label for="dip_rm">1RM Weighted Dips:</label>
+				<input type="number" id="dip_rm" name="dip_rm" step="0.1" required />
+			</div>
+			<div class="form-inline">
+				<label for="squat_rm">1RM Squat:</label>
+				<input
+					type="number"
+					id="squat_rm"
+					name="squat_rm"
+					step="0.1"
+					required
+				/>
+			</div>
+			<div class="form-inline">
+				<label for="muscle_up_rm">1RM Muscle-ups:</label>
+				<input
+					type="number"
+					id="muscle_up_rm"
+					name="muscle_up_rm"
+					step="0.1"
+					required
+				/>
+			</div>
+			<button type="submit" class="btn-add">Agregar Registro</button>
+		</form>
+
+		<!-- Tabla para gestionar registros -->
+		<h2>Historial de Registros</h2>
+		<div class="table-responsive">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Fecha</th>
+						<th>1RM Pull-up</th>
+						<th>1RM Weighted Dips</th>
+						<th>1RM Squat</th>
+						<th>1RM Muscle-ups</th>
+						<th>Acciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for record in rm_data %}
+					<tr>
+						<td>{{ record.date }}</td>
+						<td>{{ record.pull_up_rm }}</td>
+						<td>{{ record.dip_rm }}</td>
+						<td>{{ record.squat_rm }}</td>
+						<td>{{ record.muscle_up_rm }}</td>
+						<td>
+							<!-- Botón para Editar -->
+							<form
+								method="GET"
+								action="{{ url_for('records.edit_record', record_id=record.id) }}"
+							>
+								<button type="submit">Editar</button>
+							</form>
+							<!-- Botón para Eliminar con confirmación -->
+							<form
+								method="POST"
+								action="{{ url_for('records.delete_record', record_id=record.id) }}"
+								onsubmit="return confirmDelete()"
+							>
+								<button type="submit" class="delete-btn">Eliminar</button>
+							</form>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</body>
+	<script>
+		function confirmDelete() {
+			return confirm("¿Estás seguro de que deseas eliminar este registro?");
+		}
+
+		function confirmSave() {
+			return confirm("¿Estás seguro de que deseas guardar este registro?");
+		}
+	</script>
+
+	{% endblock %}
+</html>

@@ -1,0 +1,135 @@
+{% extends "general/base.html" %} {% block content %}
+<div class="edit-block-container">
+	<h2>Editar Bloque</h2>
+	<form method="POST">
+		<label for="block-name">Nombre del Bloque:</label>
+		<input
+			type="text"
+			id="block-name"
+			name="block_name"
+			value="{{ block.name }}"
+			required
+		/>
+
+		<label for="block-duration">Duración del Bloque (semanas):</label>
+		<input
+			type="number"
+			id="block-duration"
+			name="block_duration"
+			value="{{ block.duration }}"
+			required
+		/>
+
+		<label for="start-date">Fecha de Inicio:</label>
+		<input
+			type="date"
+			id="start-date"
+			name="start_date"
+			value="{{ block.start_date }}"
+			required
+		/>
+
+		<label for="block-weekly-increment">Incremento Semanal (%):</label>
+		<input
+			type="number"
+			id="block-weekly-increment"
+			name="weekly_increment"
+			value="{{ block.weekly_increment }}"
+			required
+		/>
+
+		<label for="block-rm-pullups">RM Pull-Ups:</label>
+		<input
+			type="number"
+			id="block-rm-pullups"
+			name="rm_pullups"
+			value="{{ block.rm_pullups }}"
+			required
+		/>
+
+		<label for="block-rm-dips">RM Dips:</label>
+		<input
+			type="number"
+			id="block-rm-dips"
+			name="rm_dips"
+			value="{{ block.rm_dips }}"
+			required
+		/>
+
+		<label for="block-rm-muscleups">RM Muscle-Ups:</label>
+		<input
+			type="number"
+			id="block-rm-muscleups"
+			name="rm_muscleups"
+			value="{{ block.rm_muscleups }}"
+			required
+		/>
+
+		<label for="block-rm-squats">RM Squats:</label>
+		<input
+			type="number"
+			id="block-rm-squats"
+			name="rm_squats"
+			value="{{ block.rm_squats }}"
+			required
+		/>
+
+		<button type="submit" class="btn btn-save">Guardar Cambios</button>
+	</form>
+</div>
+
+<!-- CSS para dar estilo al diseño -->
+<style>
+	.edit-block-container {
+		max-width: 600px;
+		margin: 0 auto;
+		padding: 20px;
+		background-color: #1a1a1a;
+		border-radius: 10px;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+		color: #f0f0f0;
+	}
+
+	.edit-block-container h2 {
+		text-align: center;
+		font-size: 2rem;
+		margin-bottom: 20px;
+		color: #ff6f61;
+	}
+
+	.edit-block-container label {
+		display: block;
+		font-size: 1.2em;
+		margin-bottom: 5px;
+		color: #e0e0e0;
+	}
+
+	.edit-block-container input {
+		width: 100%;
+		padding: 10px;
+		font-size: 1em;
+		margin-bottom: 20px;
+		border: 1px solid #333;
+		border-radius: 5px;
+		background-color: #333;
+		color: #e0e0e0;
+	}
+
+	.btn-save {
+		display: block;
+		width: 100%;
+		padding: 10px;
+		font-size: 1.2em;
+		border: none;
+		border-radius: 5px;
+		background-color: #007bff;
+		color: white;
+		cursor: pointer;
+		transition: background-color 0.3s ease;
+	}
+
+	.btn-save:hover {
+		background-color: #0056b3;
+	}
+</style>
+{% endblock %}

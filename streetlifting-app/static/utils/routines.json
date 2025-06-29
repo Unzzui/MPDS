@@ -1,0 +1,86 @@
+{
+    "routines": [
+        {
+            "name": "Primary Pull \ud83d\ude0d",
+            "exercises": [
+                "Pull-Up",
+                "Gironda Row",
+                "Unilateral Pulldown",
+                "Barbell Curl (EZ Bar)",
+                "Wrist Curl",
+                "Hammer Curl"
+            ],
+            "days": [
+                1
+            ],
+            "main_lifts": [
+                "Pull-Up"
+            ]
+        },
+        {
+            "name": "Primary Squat \ud83e\udd22",
+            "exercises": [
+                "Squat",
+                "Leg Curl",
+                "Leg Extension",
+                "Hip Adduction"
+            ],
+            "days": [
+                2
+            ],
+            "main_lifts": [
+                "Squat"
+            ]
+        },
+        {
+            "name": "Primary Dips \ud83e\udd75",
+            "exercises": [
+                "Weighted Dips",
+                "Military Press",
+                "Unilateral Triceps Extension",
+                "Flat Bench Press"
+            ],
+            "days": [
+                3
+            ],
+            "main_lifts": [
+                "Weighted Dips"
+            ]
+        },
+        {
+            "name": "Secondary Pull \ud83d\ude0d",
+            "exercises": [
+                "Muscle-Up",
+                "Pin Pull-Up",
+                "Gironda Row",
+                "Unilateral Pulldown",
+                "Barbell Curl (EZ Bar)",
+                "Wrist Curl",
+                "Hammer Curl"
+            ],
+            "days": [
+                4
+            ],
+            "main_lifts": [
+                "Pull-Up"
+            ]
+        },
+        {
+            "name": "Secondary Dips \ud83e\udd75",
+            "exercises": [
+                "Weighted Dips",
+                "Military Press",
+                "Unilateral Triceps Extension",
+                "Flat Bench Press",
+                "Incline Bench Press",
+                "Lateral Raises"
+            ],
+            "days": [
+                5
+            ],
+            "main_lifts": [
+                "Weighted Dips"
+            ]
+        }
+    ]
+}

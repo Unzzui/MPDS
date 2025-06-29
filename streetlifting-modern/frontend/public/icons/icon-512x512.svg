@@ -1,0 +1,6 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" rx="102.4" fill="#0a0a0a"/>
+  <circle cx="256" cy="256" r="204.8" fill="none" stroke="#00ff88" stroke-width="25.6"/>
+  <text x="256" y="307.2" text-anchor="middle" fill="#00ff88" font-family="monospace" font-size="153.6" font-weight="bold">MPDS</text>
+  <text x="256" y="409.6" text-anchor="middle" fill="#00ff88" font-family="monospace" font-size="76.8">STREETLIFTING</text>
+</svg>

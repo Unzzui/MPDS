@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+{% extends "general/base.html" %} {% block title %}Crear Bloque de
+Entrenamiento{% endblock %} {% block content %}
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Crear Bloque de Entrenamiento</title>
+		<link
+			rel="stylesheet"
+			href="{{ url_for('static', filename='style.css') }}"
+		/>
+		<style>
+			body {
+				background-color: #0d0d0d;
+				color: #e0e0e0;
+				font-family: "Roboto", Arial, sans-serif;
+				margin: 0;
+				padding: 0;
+			}
+			header {
+				background-color: #1a1a1a;
+				padding: 20px;
+				text-align: center;
+				border-bottom: 2px solid #ff6f61;
+			}
+			header h1 {
+				color: #ff6f61;
+				margin: 0;
+				font-size: 2.5em;
+			}
+			form {
+				max-width: 800px;
+				margin: 20px auto;
+				background-color: #1a1a1a;
+				padding: 20px;
+				border-radius: 10px;
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+			}
+			section {
+				margin-bottom: 20px;
+			}
+			section h2 {
+				color: #ff6f61;
+				font-size: 1.8em;
+				margin-bottom: 10px;
+			}
+			label {
+				display: block;
+				margin-bottom: 5px;
+				font-weight: bold;
+			}
+			input[type="text"],
+			input[type="number"],
+			input[type="date"],
+			select {
+				width: 100%;
+				padding: 10px;
+				margin-bottom: 15px;
+				border: 1px solid #333;
+				border-radius: 5px;
+				background-color: #333;
+				color: #e0e0e0;
+				font-size: 1em;
+			}
+			input[type="radio"] {
+				margin-right: 10px;
+			}
+			button {
+				width: 100%;
+				padding: 15px;
+				background-color: #ff6f61;
+				color: #fff;
+				border: none;
+				border-radius: 5px;
+				font-size: 1.2em;
+				cursor: pointer;
+				transition: background-color 0.3s ease;
+			}
+			button:hover {
+				background-color: #e65c50;
+			}
+			#custom-strategy {
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<header>
+			<h1>Crear Bloque de Entrenamiento</h1>
+		</header>
+		<form method="POST" action="{{ url_for('blocks.create_block') }}">
+			<!-- Información General -->
+			<section>
+				<h2>Información General</h2>
+				<label for="block-name">Nombre del Bloque:</label>
+				<input
+					type="text"
+					id="block-name"
+					name="block_name"
+					placeholder="Ej: Bloque de Fuerza"
+					required
+				/>
+
+				<label for="block-duration">Duración del Bloque (semanas):</label>
+				<select id="block-duration" name="block_duration" required>
+					<option value="4">4 semanas</option>
+					<option value="6">6 semanas</option>
+					<option value="8">8 semanas</option>
+					<option value="12">12 semanas</option>
+				</select>
+
+				<label for="start-date">Fecha de Inicio:</label>
+				<input type="date" id="start-date" name="start_date" required />
+			</section>
+
+			<!-- RM Inicial -->
+			<section>
+				<h2>RM Inicial</h2>
+				<label for="rm-pullups">RM Dominadas (kg):</label>
+				<input
+					type="number"
+					id="rm-pullups"
+					name="rm_pullups"
+					step="0.1"
+					placeholder="Ej: 50"
+				/>
+
+				<label for="rm-dips">RM Dips (kg):</label>
+				<input
+					type="number"
+					id="rm-dips"
+					name="rm_dips"
+					step="0.1"
+					placeholder="Ej: 60"
+				/>
+
+				<label for="rm-muscleups">RM Muscle-Up (kg):</label>
+				<input
+					type="number"
+					id="rm-muscleups"
+					name="rm_muscleups"
+					step="0.1"
+					placeholder="Ej: 10"
+				/>
+
+				<label for="rm-squats">RM Sentadillas (kg):</label>
+				<input
+					type="number"
+					id="rm-squats"
+					name="rm_squats"
+					step="0.1"
+					placeholder="Ej: 100"
+				/>
+			</section>
+
+			<!-- Rutinas por Día -->
+			<section>
+				<h2>Asignar Rutinas por Día</h2>
+				<p>Selecciona una rutina para cada día:</p>
+				{% set days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes",
+				"Sábado", "Domingo"] %} {% for index, day in enumerate(days) %}
+				<div>
+					<label for="day-{{ index }}">{{ day }}:</label>
+					<select name="routines_by_day[{{ index }}]" id="day-{{ index }}">
+						<option value="Rest">Descanso</option>
+						{% for routine in routines %}
+						<option value="{{ routine.name }}">{{ routine.name }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				{% endfor %}
+			</section>
+
+			<!-- Estrategia del Bloque -->
+			<section>
+				<h2>Estrategia del Bloque</h2>
+				<label>
+					<input type="radio" name="strategy" value="default" checked />
+					Predeterminada (Incremento del 5% semanal, Descarga al 60% del RM)
+				</label>
+				<label>
+					<input type="radio" name="strategy" value="custom" />
+					Personalizada
+				</label>
+
+				<div id="custom-strategy">
+					<label for="weekly-increment">Incremento Semanal:</label>
+					<select id="increment-type" name="increment_type">
+						<option value="percentage" selected>Porcentaje (%)</option>
+						<option value="absolute">Valor Absoluto (kg)</option>
+					</select>
+
+					<label for="weekly-increment">Valor del Incremento:</label>
+					<input
+						type="number"
+						id="weekly-increment"
+						name="weekly_increment"
+						step="0.1"
+						value="5.0"
+					/>
+
+					<label for="deload-week">Semana de Descarga (opcional):</label>
+					<input
+						type="number"
+						id="deload-week"
+						name="deload_week"
+						placeholder="Ej: 4"
+					/>
+				</div>
+			</section>
+
+			<!-- Botón de Envío -->
+			<section>
+				<button type="submit">Crear Bloque</button>
+			</section>
+		</form>
+
+		<script>
+			// Mostrar/Ocultar estrategia personalizada
+			document.querySelectorAll('input[name="strategy"]').forEach((radio) => {
+				radio.addEventListener("change", function () {
+					const customStrategy = document.getElementById("custom-strategy");
+					customStrategy.style.display =
+						this.value === "custom" ? "block" : "none";
+				});
+			});
+		</script>
+	</body>
+</html>
+{% endblock %}

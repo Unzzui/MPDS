@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Detalle del Bloque</title>
+		<link
+			rel="stylesheet"
+			href="{{ url_for('static', filename='style.css') }}"
+		/>
+	</head>
+	<body>
+		<header>
+			<h1>Detalle del Bloque</h1>
+		</header>
+		<main>
+			<section>
+				<h2>{{ block.name }}</h2>
+				<p><strong>Inicio:</strong> {{ block.start_date }}</p>
+				<p><strong>Fin:</strong> {{ block.end_date }}</p>
+				<p><strong>Duración:</strong> {{ block.total_weeks }} semanas</p>
+				<p><strong>Estrategia:</strong> {{ block.strategy }}</p>
+				<p>
+					<strong>Semana actual:</strong> {{ block.current_week }} / {{
+					block.total_weeks }}
+				</p>
+				<p><strong>Etapa actual:</strong> {{ block.current_stage }}</p>
+			</section>
+			<section>
+				<h3>Etapas del Bloque</h3>
+				<table>
+					<thead>
+						<tr>
+							<th>Semana</th>
+							<th>Nombre de la Etapa</th>
+							<th>% de Carga</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for stage in stages %}
+						<tr>
+							<td>{{ stage.week_number }}</td>
+							<td>{{ stage.name }}</td>
+							<td>{{ stage.load_percentage }}%</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</section>
+			<a href="{{ url_for('index.index') }}"
+				><button>Volver al Inicio</button></a
+			>
+		</main>
+	</body>
+</html>

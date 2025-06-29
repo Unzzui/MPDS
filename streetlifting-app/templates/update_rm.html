@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="../static/style.css" />
+<header>
+	<a href="{{ url_for('index') }}" class="back-button"
+		>Volver al Menú Principal</a
+	>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+			<title>Actualizar 1RM</title>
+		</head>
+		<body>
+			<h1>Actualizar 1RM</h1>
+			<form method="POST">
+				<label for="date">Fecha del Registro:</label>
+				<input type="date" name="date" value="{{ today_date }}" required />
+				<br />
+				<label for="pull_up_rm">Nuevo 1RM Pull-up (kg):</label>
+				<input type="number" name="pull_up_rm" step="0.1" />
+				<br />
+				<label for="dip_rm">Nuevo 1RM Weighted Dips (kg):</label>
+				<input type="number" name="dip_rm" step="0.1" />
+				<br />
+				<label for="squat_rm">Nuevo 1RM Back Squat (kg):</label>
+				<input type="number" name="squat_rm" step="0.1" />
+				<br />
+				<label for="muscle_up_rm">Nuevo 1RM Muscle-ups (kg):</label>
+				<input type="number" name="muscle_up_rm" step="0.1" />
+				<br />
+				<button type="submit">Actualizar</button>
+			</form>
+		</body>
+	</html>
+</header>

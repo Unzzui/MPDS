@@ -1,0 +1,255 @@
+{% extends "general/base.html" %} {% block title %}Inicio - MPDS{% endblock %}
+{% block content %}
+<div class="dashboard">
+	<script
+		src="{{ url_for('static', filename='js/progressBlock.js') }}"
+		defer
+	></script>
+	<style>
+		* {
+			overflow-x: hidden; /* Evita desplazamiento horizontal */
+		}
+
+		.recent-workouts {
+			margin-top: 20px;
+			overflow-x: auto; /* Asegura que el contenido no se desplace hacia los lados */
+		}
+
+		@media (max-width: 768px) {
+			.recent-workouts {
+				max-width: 100%;
+				font-size: 0.9em;
+			}
+
+			.recent-workouts table {
+				width: 100%;
+				table-layout: fixed; /* Asegura que la tabla se ajuste al ancho disponible */
+			}
+
+			.recent-workouts th,
+			.recent-workouts td {
+				padding: 8px;
+				word-wrap: break-word; /* Asegura que el contenido se ajuste dentro de las celdas */
+			}
+		}
+
+		@media (max-width: 430px) {
+			.recent-workouts {
+				max-width: 100%;
+				font-size: 0.8em;
+			}
+
+			.recent-workouts table {
+				width: 100%;
+				table-layout: fixed;
+			}
+
+			.recent-workouts th,
+			.recent-workouts td {
+				padding: 3px;
+				word-wrap: break-word;
+			}
+		}
+
+		@media (max-width: 390px) {
+			.recent-workouts {
+				max-width: 100%;
+				font-size: 0.7em;
+			}
+
+			.recent-workouts table {
+				width: 100%;
+				table-layout: fixed;
+			}
+
+			.recent-workouts th,
+			.recent-workouts td {
+				padding: 2px;
+				word-wrap: break-word;
+			}
+		}
+		.alert {
+			display: none;
+			padding: 10px;
+			background-color: #ff6f61;
+			color: white;
+			border-radius: 5px;
+			text-align: center;
+			font-size: 1.2em;
+			margin-bottom: 20px;
+			animation: blink 1s infinite;
+		}
+
+		@keyframes blink {
+			0%,
+			100% {
+				opacity: 1;
+			}
+			50% {
+				opacity: 0;
+			}
+		}
+	</style>
+	<h1>Bienvenido, {{ user.name }}</h1>
+	<p>El progreso está en tus manos !!! 💪</p>
+	<!-- Alerta -->
+	<div id="alert" class="alert">
+		Tienes entrenamientos pendientes. ¡Haz clic aquí para retomarlos!
+	</div>
+	<!-- Opciones rápidas -->
+	<div class="quick-actions">
+		<h2>Opciones Rápidas</h2>
+		{% if today_routine == "Rest" %}
+		<p>Hoy es día de descanso. ¡Relájate y recupérate!</p>
+		{% else %}
+		<p>Hoy tienes: <strong>{{ today_routine }}</strong></p>
+		<a
+			href="{{ url_for('workouts.log_workout', day_type=today_routine) }}"
+			class="btn"
+			>Registrar Entrenamiento</a
+		>
+		{% endif %}
+
+		<a href="{{ url_for('routines.add_routine_route') }}" class="btn-secondary"
+			>Agregar Nueva Rutina</a
+		>
+		<a href="{{ url_for('blocks.create_block') }}" class="btn-secondary"
+			>Crear Bloque</a
+		>
+		<a href="{{ url_for('records.progress') }}" class="btn-secondary"
+			>Ver Estadísticas</a
+		>
+	</div>
+	<div class="block-status">
+		<!-- Barra de progreso del bloque -->
+		<div id="training-block-info" class="hidden">
+			<h2>Progreso del Bloque de Entrenamiento</h2>
+			<p>Etapa Actual: <span id="current-stage"></span></p>
+			<p>
+				Semana Actual: <span id="current-week"></span> de
+				<span id="total-weeks"></span>
+			</p>
+			<div class="progress-bar-container">
+				<div id="progress" class="progress-bar"></div>
+			</div>
+			<a href="{{ url_for('blocks.create_block') }}" class="btn"
+				>Ver Detalles</a
+			>
+		</div>
+
+		<!-- Mensaje de bloque inactivo -->
+		<div id="no-block-info" class="hidden">
+			<h2>Sin Bloque Activo</h2>
+			<p>
+				No hay bloques de entrenamiento activos en este momento. ¿Qué te
+				gustaría hacer?
+			</p>
+			<a href="{{ url_for('blocks.create_block') }}" class="btn"
+				>Crear Bloque</a
+			>
+			<a
+				href="{{ url_for('workouts.log_workout', day_type='custom') }}"
+				class="btn"
+				>Entrenar Sin Bloque</a
+			>
+		</div>
+	</div>
+
+	<!-- Calendario -->
+	{% include 'calendar.html' %}
+
+	<!-- Progresión de 1RM -->
+	<div class="one-rm-progression">
+		<h2>Progresión de 1RM</h2>
+		<p>Esta información se basa en tus registros de entrenamiento.</p>
+		<table class="rm-table">
+			<thead>
+				<tr>
+					<th>Ejercicio</th>
+					<th>1RM Inicial (kg)</th>
+					<th>1RM Hipotético (kg)</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for exercise, initial_rm in one_rm_initial.items() %}
+				<tr>
+					<td>{{ exercise }}</td>
+					<td>{{ initial_rm }}</td>
+					<td>{{ one_rm_hypothetical.get(exercise, 'Aún no se registra') }}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+
+	<!-- Entrenamientos recientes -->
+	<div class="recent-workouts">
+		<h2>Entrenamientos Recientes</h2>
+		{% if recent_workouts and recent_workouts|length > 0 %}
+		<table class="rm-table">
+			<thead>
+				<tr>
+					<th>Fecha</th>
+					<th>Tipo de Día</th>
+					<th>Ejercicio</th>
+					<th>Peso (kg)</th>
+					<th>Reps</th>
+					<th>RPE</th>
+					<th>Acciones</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for workout in recent_workouts %}
+				<tr>
+					<td>{{ workout.date }}</td>
+					<td>{{ workout.day_type }}</td>
+					<td>{{ workout.main_lift_name }}</td>
+					<td>{{ workout.weight }}</td>
+					<td>{{ workout.reps }}</td>
+					<td>{{ workout.rpe }}</td>
+					<td>
+						<a
+							href="{{ url_for('workouts.view_workout', workout_id=workout.id) }}"
+							>Ver más</a
+						>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		{% else %}
+		<p>No tienes entrenamientos registrados.</p>
+		{% endif %}
+	</div>
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			function checkPendingWorkouts() {
+				fetch("/pending-workouts")
+					.then((response) => response.json())
+					.then((pendingWorkouts) => {
+						if (pendingWorkouts && pendingWorkouts.length > 0) {
+							const alert = document.getElementById("alert");
+							alert.style.display = "block";
+							alert.addEventListener("click", function () {
+								const workout = pendingWorkouts[0]; // Tomar el más reciente
+								window.location.href = `/log/${workout.day_type}?date=${workout.date}`;
+							});
+						}
+					})
+					.catch((error) =>
+						console.error(
+							"Error al verificar entrenamientos pendientes:",
+							error
+						)
+					);
+			}
+
+			// Verificar entrenamientos pendientes al cargar la página
+			checkPendingWorkouts();
+
+			// Verificar entrenamientos pendientes cada minuto
+			setInterval(checkPendingWorkouts, 60000); // 60000 ms = 1 minuto
+		});
+	</script>
+</div>
+{% endblock %}

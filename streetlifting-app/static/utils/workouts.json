@@ -1,0 +1,673 @@
+{
+    "workouts": [
+        {
+            "id": 1,
+            "date": "2024-12-28",
+            "day_type": "Secondary Dips 🥵",
+            "inprogress": false,
+            "completed": true,
+            "exercises": [
+                {
+                    "name": "Weighted Dips",
+                    "sets": [
+                        {
+                            "weight": 50.0,
+                            "reps": 1,
+                            "rpe": 7.0,
+                            "notes": "Fatiga por el jueves.",
+                            "completed": true
+                        },
+                        {
+                            "weight": 45.0,
+                            "reps": 2,
+                            "rpe": 7.0,
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": 35.0,
+                            "reps": 5,
+                            "rpe": 8.0,
+                            "notes": "",
+                            "completed": true
+                        }
+                    ]
+                },
+                {
+                    "name": "Military Press",
+                    "sets": [
+                        {
+                            "weight": 42.0,
+                            "reps": 5,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": 42.0,
+                            "reps": 3,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": 42.0,
+                            "reps": 3,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        }
+                    ]
+                },
+                {
+                    "name": "Unilateral Triceps Extension",
+                    "sets": [
+                        {
+                            "weight": 52.0,
+                            "reps": 10,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": 52.0,
+                            "reps": 8,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": 52.0,
+                            "reps": 8,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        }
+                    ]
+                },
+                {
+                    "name": "Lateral Raises",
+                    "sets": [
+                        {
+                            "weight": 10.0,
+                            "reps": 8,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": 10.0,
+                            "reps": 7,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": 10.0,
+                            "reps": 6,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "date": "2024-12-29",
+            "day_type": "Primary Squat 🤢",
+            "inprogress": false,
+            "completed": true,
+            "exercises": [
+                {
+                    "name": "Squat",
+                    "sets": [
+                        {
+                            "weight": 90.0,
+                            "reps": 3,
+                            "rpe": 8.0,
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": 95.0,
+                            "reps": 3,
+                            "rpe": 8.5,
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": 95.0,
+                            "reps": 3,
+                            "rpe": 9.0,
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": 80.0,
+                            "reps": 5,
+                            "rpe": 6.0,
+                            "notes": "",
+                            "completed": true
+                        }
+                    ]
+                },
+                {
+                    "name": "Leg Curl",
+                    "sets": [
+                        {
+                            "weight": 105.0,
+                            "reps": 3,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": 85.0,
+                            "reps": 5,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": 105.0,
+                            "reps": 3,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": 85.0,
+                            "reps": 4,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": 105.0,
+                            "reps": 3,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": 85.0,
+                            "reps": 8,
+                            "rpe": null,
+                            "notes": "2 asistidas.",
+                            "completed": true
+                        }
+                    ]
+                },
+                {
+                    "name": "Leg Extension",
+                    "sets": [
+                        {
+                            "weight": 105.0,
+                            "reps": 3,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": 85.0,
+                            "reps": 5,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": 105.0,
+                            "reps": 3,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": 85.0,
+                            "reps": 5,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "date": "2025-01-07",
+            "day_type": "Primary Pull 😍",
+            "inprogress": false,
+            "completed": true,
+            "exercises": [
+                {
+                    "name": "Pull-Up",
+                    "sets": [
+                        {
+                            "weight": 40.0,
+                            "reps": 3,
+                            "rpe": 8.0,
+                            "notes": "facilito papi",
+                            "completed": true
+                        },
+                        {
+                            "weight": 40.0,
+                            "reps": 3,
+                            "rpe": 8.0,
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": 40.0,
+                            "reps": 3,
+                            "rpe": 8.5,
+                            "notes": "mmm",
+                            "completed": true
+                        },
+                        {
+                            "weight": 30.0,
+                            "reps": 5,
+                            "rpe": 7.5,
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": 20.0,
+                            "reps": 8,
+                            "rpe": 7.0,
+                            "notes": "",
+                            "completed": true
+                        }
+                    ]
+                },
+                {
+                    "name": "Gironda Row",
+                    "sets": [
+                        {
+                            "weight": 80.0,
+                            "reps": 12,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": 80.0,
+                            "reps": 10,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        }
+                    ]
+                },
+                {
+                    "name": "Unilateral Pulldown",
+                    "sets": [
+                        {
+                            "weight": 76.0,
+                            "reps": 14,
+                            "rpe": null,
+                            "notes": "en maquina ",
+                            "completed": true
+                        },
+                        {
+                            "weight": 76.0,
+                            "reps": 12,
+                            "rpe": null,
+                            "notes": "en maquina",
+                            "completed": true
+                        }
+                    ]
+                },
+                {
+                    "name": "Barbell Curl EZ Bar",
+                    "sets": [
+                        {
+                            "weight": 31.5,
+                            "reps": 8,
+                            "rpe": null,
+                            "notes": "Apoyado en pared",
+                            "completed": true
+                        },
+                        {
+                            "weight": 31.5,
+                            "reps": 6,
+                            "rpe": null,
+                            "notes": "Apoyado en pared",
+                            "completed": true
+                        }
+                    ]
+                },
+                {
+                    "name": "Wrist Curl",
+                    "sets": [
+                        {
+                            "weight": 15.0,
+                            "reps": 14,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": 15.0,
+                            "reps": 12,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        }
+                    ]
+                },
+                {
+                    "name": "Hammer Curl",
+                    "sets": [
+                        {
+                            "weight": 15.0,
+                            "reps": 10,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": 15.0,
+                            "reps": 8,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        }
+                    ]
+                },
+                {
+                    "name": "Preacher Curl",
+                    "sets": [
+                        {
+                            "weight": 31.5,
+                            "reps": 8,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": 31.5,
+                            "reps": 8,
+                            "rpe": null,
+                            "notes": "",
+                            "completed": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "date": "2025-01-09",
+            "day_type": "Primary Dips 🥵",
+            "inprogress": false,
+            "completed": true,
+            "exercises": [
+                {
+                    "name": "Weighted Dips",
+                    "sets": [
+                        {
+                            "weight": "47.3",
+                            "reps": "3",
+                            "rpe": "8",
+                            "notes": "fatiga por prueba rm semana anterior",
+                            "completed": true
+                        },
+                        {
+                            "weight": "47.3",
+                            "reps": "3",
+                            "rpe": "8",
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": "47.3",
+                            "reps": "3",
+                            "rpe": "8",
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": "35",
+                            "reps": "3",
+                            "rpe": "7",
+                            "notes": "back off",
+                            "completed": true
+                        },
+                        {
+                            "weight": "25",
+                            "reps": "6",
+                            "rpe": "8",
+                            "notes": "tempo 321",
+                            "completed": true
+                        }
+                    ]
+                },
+                {
+                    "name": "Military Press",
+                    "sets": [
+                        {
+                            "weight": "40",
+                            "reps": "3",
+                            "rpe": "",
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": "45",
+                            "reps": "3",
+                            "rpe": "",
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": "40",
+                            "reps": "6",
+                            "rpe": "",
+                            "notes": "",
+                            "completed": true
+                        }
+                    ]
+                },
+                {
+                    "name": "Flat Bench Press",
+                    "sets": [
+                        {
+                            "weight": "75",
+                            "reps": "3",
+                            "rpe": "7",
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": "75",
+                            "reps": "3",
+                            "rpe": "7",
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": "70",
+                            "reps": "6",
+                            "rpe": "7.5",
+                            "notes": "",
+                            "completed": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "date": "2025-01-10",
+            "day_type": "Secondary Pull 😍",
+            "inprogress": false,
+            "completed": true,
+            "exercises": [
+                {
+                    "name": "Muscle-Up",
+                    "sets": [
+                        {
+                            "weight": "5",
+                            "reps": "1",
+                            "rpe": "8",
+                            "notes": "Apretaa la raja!",
+                            "completed": true
+                        },
+                        {
+                            "weight": "5",
+                            "reps": "1",
+                            "rpe": "8",
+                            "notes": "Metete sin miedo",
+                            "completed": false
+                        },
+                        {
+                            "weight": "5",
+                            "reps": "1",
+                            "rpe": "7",
+                            "notes": "Controla el balanceo, falta + core.",
+                            "completed": true
+                        }
+                    ]
+                },
+                {
+                    "name": "Pin Pull-Up",
+                    "sets": [
+                        {
+                            "weight": "40",
+                            "reps": "3",
+                            "rpe": "8",
+                            "notes": "Apretaa los discos hombre!",
+                            "completed": true
+                        },
+                        {
+                            "weight": "40",
+                            "reps": "3",
+                            "rpe": "8",
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": "40",
+                            "reps": "3",
+                            "rpe": "8",
+                            "notes": "",
+                            "completed": true
+                        }
+                    ]
+                },
+                {
+                    "name": "Gironda Row",
+                    "sets": [
+                        {
+                            "weight": "70",
+                            "reps": "8",
+                            "rpe": "",
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": "80",
+                            "reps": "10",
+                            "rpe": "",
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": "70",
+                            "reps": "14",
+                            "rpe": "",
+                            "notes": "",
+                            "completed": true
+                        }
+                    ]
+                },
+                {
+                    "name": "Unilateral Pulldown",
+                    "sets": [
+                        {
+                            "weight": "85",
+                            "reps": "8",
+                            "rpe": "7",
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": "105",
+                            "reps": "5",
+                            "rpe": "8",
+                            "notes": "Wa facil",
+                            "completed": true
+                        },
+                        {
+                            "weight": "97",
+                            "reps": "5",
+                            "rpe": "7",
+                            "notes": "",
+                            "completed": true
+                        }
+                    ]
+                },
+                {
+                    "name": "Barbell Curl EZ Bar",
+                    "sets": [
+                        {
+                            "weight": "31.5",
+                            "reps": "8",
+                            "rpe": "8",
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": "31.5",
+                            "reps": "6",
+                            "rpe": "8",
+                            "notes": "",
+                            "completed": true
+                        }
+                    ]
+                },
+                {
+                    "name": "Wrist Curl",
+                    "sets": [
+                        {
+                            "weight": "15",
+                            "reps": "8",
+                            "rpe": "",
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": "15",
+                            "reps": "10",
+                            "rpe": "",
+                            "notes": "",
+                            "completed": true
+                        }
+                    ]
+                },
+                {
+                    "name": "Hammer Curl",
+                    "sets": [
+                        {
+                            "weight": "15",
+                            "reps": "6",
+                            "rpe": "",
+                            "notes": "",
+                            "completed": true
+                        },
+                        {
+                            "weight": "15",
+                            "reps": "5",
+                            "rpe": "",
+                            "notes": "",
+                            "completed": true
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

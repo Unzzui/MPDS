@@ -1,0 +1,391 @@
+/* Register - Terminal Style */
+.register-page {
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md);
+  font-family: var(--font-sans);
+}
+
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md);
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  font-family: var(--font-mono);
+}
+
+.register-card {
+  width: 100%;
+  max-width: 450px;
+  background-color: var(--bg-secondary);
+  border: 2px solid var(--accent-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  box-shadow: 0 8px 32px rgba(0, 255, 136, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.register-header {
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.register-title {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--accent-primary);
+  margin-bottom: var(--spacing-sm);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.register-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.register-form {
+  margin-bottom: var(--spacing-lg);
+}
+
+.form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.form-label {
+  display: block;
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.9rem;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-input {
+  width: 100%;
+  padding: var(--spacing-md);
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.1);
+}
+
+.form-input::placeholder {
+  color: var(--text-muted);
+}
+
+.form-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.register-button {
+  width: 100%;
+  padding: var(--spacing-md);
+  background-color: var(--accent-primary);
+  color: var(--bg-primary);
+  border: 1px solid var(--accent-primary);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: var(--spacing-md);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.register-button:hover {
+  background-color: #00cc6a;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.register-button:active {
+  transform: translateY(0);
+}
+
+.register-button:disabled {
+  background-color: var(--text-muted);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.register-footer {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.register-link {
+  color: var(--accent-primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.register-link:hover {
+  color: var(--accent-secondary);
+  text-decoration: underline;
+}
+
+.error-message {
+  background-color: rgba(255, 68, 68, 0.1);
+  border: 1px solid var(--text-error);
+  color: var(--text-error);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-md);
+  font-size: 0.9rem;
+  text-align: center;
+  font-family: var(--font-mono);
+}
+
+.success-message {
+  background-color: rgba(0, 255, 136, 0.1);
+  border: 1px solid var(--text-success);
+  color: var(--text-success);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-md);
+  font-size: 0.9rem;
+  text-align: center;
+  font-family: var(--font-mono);
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--bg-primary);
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s ease-in-out infinite;
+  margin-right: var(--spacing-sm);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Password strength indicator */
+.password-strength {
+  margin-top: var(--spacing-sm);
+}
+
+.strength-bar {
+  width: 100%;
+  height: 4px;
+  background-color: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-bottom: var(--spacing-xs);
+}
+
+.strength-fill {
+  height: 100%;
+  transition: all 0.3s ease;
+  border-radius: var(--radius-sm);
+}
+
+.strength-fill.weak {
+  background-color: var(--text-error);
+  width: 25%;
+}
+
+.strength-fill.fair {
+  background-color: var(--text-warning);
+  width: 50%;
+}
+
+.strength-fill.good {
+  background-color: var(--accent-secondary);
+  width: 75%;
+}
+
+.strength-fill.strong {
+  background-color: var(--text-success);
+  width: 100%;
+}
+
+.strength-text {
+  font-size: 0.8rem;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.strength-text.weak {
+  color: var(--text-error);
+}
+
+.strength-text.fair {
+  color: var(--text-warning);
+}
+
+.strength-text.good {
+  color: var(--accent-secondary);
+}
+
+.strength-text.strong {
+  color: var(--text-success);
+}
+
+/* Form validation styles */
+.form-input.valid {
+  border-color: var(--text-success);
+  box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.1);
+}
+
+.form-input.invalid {
+  border-color: var(--text-error);
+  box-shadow: 0 0 0 2px rgba(255, 68, 68, 0.1);
+}
+
+.validation-message {
+  font-size: 0.8rem;
+  font-family: var(--font-mono);
+  margin-top: var(--spacing-xs);
+}
+
+.validation-message.valid {
+  color: var(--text-success);
+}
+
+.validation-message.invalid {
+  color: var(--text-error);
+}
+
+/* Terminal-style focus states */
+.register-container .btn:focus,
+.register-container .form-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-primary);
+}
+
+/* Terminal-style selection */
+.register-page ::selection {
+  background-color: var(--accent-primary);
+  color: var(--bg-primary);
+}
+
+/* Mobile-first responsive design */
+@media (min-width: 640px) {
+  .register-container {
+    padding: var(--spacing-2xl);
+    max-width: 500px;
+  }
+  
+  .register-title {
+    font-size: 2.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .register-container {
+    max-width: 550px;
+  }
+  
+  .register-title {
+    font-size: 3rem;
+  }
+}
+
+/* Terminal-style loading states */
+.register-button:disabled .loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* Terminal-style hover effects */
+.register-container:hover {
+  box-shadow: var(--shadow-lg), 0 0 20px rgba(0, 255, 136, 0.1);
+}
+
+.form-input:hover {
+  border-color: var(--border-secondary);
+}
+
+/* Terminal-style animations for form elements */
+.form-group {
+  animation: fadeIn 0.3s ease-out;
+  animation-fill-mode: both;
+}
+
+.form-group:nth-child(1) { animation-delay: 0.1s; }
+.form-group:nth-child(2) { animation-delay: 0.2s; }
+.form-group:nth-child(3) { animation-delay: 0.3s; }
+.form-group:nth-child(4) { animation-delay: 0.4s; }
+
+/* Terminal-style keyboard navigation */
+.register-container .btn:focus-visible,
+.register-container .form-input:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* Terminal-style error states */
+.form-input.error {
+  border-color: var(--text-error);
+  box-shadow: 0 0 0 2px rgba(255, 68, 68, 0.1);
+}
+
+.form-input.error:focus {
+  border-color: var(--text-error);
+  box-shadow: 0 0 0 2px rgba(255, 68, 68, 0.2);
+}
+
+/* Terminal-style success states */
+.form-input.success {
+  border-color: var(--text-success);
+  box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.1);
+}
+
+.form-input.success:focus {
+  border-color: var(--text-success);
+  box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .register-container {
+    padding: var(--spacing-sm);
+  }
+  
+  .register-card {
+    padding: var(--spacing-lg);
+  }
+  
+  .register-title {
+    font-size: 1.75rem;
+  }
+} 
