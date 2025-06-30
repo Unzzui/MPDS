@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMemo } from 'react';
 import { apiService } from '../services/api';
 import type { OneRepMax, OneRepMaxCreate } from '../types';
 
@@ -57,8 +58,8 @@ export const useOneRepMaxes = () => {
     return oneRepMaxes.filter(rm => rm.exercise === exercise);
   };
 
-  // Get latest OneRepMax for each exercise
-  const getLatestOneRepMaxes = () => {
+  // Get latest OneRepMax for each exercise (memoized)
+  const latestOneRepMaxes = useMemo(() => {
     const latestByExercise: { [key: string]: OneRepMax } = {};
     
     oneRepMaxes.forEach(rm => {
@@ -69,7 +70,7 @@ export const useOneRepMaxes = () => {
     });
     
     return Object.values(latestByExercise);
-  };
+  }, [oneRepMaxes]);
 
   // Get progress data for charting
   const getProgressData = (exercise: string) => {
@@ -86,7 +87,7 @@ export const useOneRepMaxes = () => {
   return {
     // Data
     oneRepMaxes,
-    latestOneRepMaxes: getLatestOneRepMaxes(),
+    latestOneRepMaxes,
     
     // Loading states
     isLoadingOneRepMaxes,

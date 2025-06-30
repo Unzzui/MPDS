@@ -1,16 +1,25 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useBlocks } from '../hooks/useBlocks';
-import type { TrainingBlock } from '../types';
+import CreateBlockForm from '../components/CreateBlockForm';
+import type { TrainingBlock, TrainingBlockCreate } from '../types';
 import '../styles/Blocks.css';
 
 const BlocksPage: React.FC = () => {
-  const { blocks, isLoadingBlocks, currentBlock, createBlock, deleteBlock, isDeletingBlock } = useBlocks();
+  const { blocks, isLoadingBlocks, currentBlock, createBlock, deleteBlock, isDeletingBlock, activateBlock, isActivatingBlock } = useBlocks();
   const [showCreateForm, setShowCreateForm] = useState(false);
 
   const handleDeleteBlock = async (blockId: string) => {
     if (window.confirm('¿Estás seguro de que quieres eliminar este bloque de entrenamiento?')) {
       deleteBlock(blockId);
+    }
+  };
+
+  const handleActivateBlock = async (blockId: string) => {
+    try {
+      await activateBlock(blockId);
+    } catch (error) {
+      console.error('Error activating block:', error);
     }
   };
 
@@ -59,10 +68,10 @@ const BlocksPage: React.FC = () => {
       <div className="blocks-header">
         <h1>Bloques de Entrenamiento</h1>
         <button 
-          className="btn-primary"
+          className="btn-create-block"
           onClick={() => setShowCreateForm(true)}
         >
-          Crear Bloque
+          + Crear Bloque
         </button>
       </div>
 
@@ -110,10 +119,10 @@ const BlocksPage: React.FC = () => {
           <div className="empty-state">
             <p>No hay bloques de entrenamiento creados.</p>
             <button 
-              className="btn-primary"
+              className="btn-create-block"
               onClick={() => setShowCreateForm(true)}
             >
-              Crear Primer Bloque
+              + Crear Primer Bloque
             </button>
           </div>
         ) : (
@@ -153,6 +162,15 @@ const BlocksPage: React.FC = () => {
                   <Link to={`/blocks/${block.id}/edit`} className="btn-secondary">
                     Editar
                   </Link>
+                  {!block.is_active && (
+                    <button 
+                      className="btn-accent"
+                      onClick={() => handleActivateBlock(block.id)}
+                      disabled={isActivatingBlock}
+                    >
+                      {isActivatingBlock ? 'Activando...' : 'Activar'}
+                    </button>
+                  )}
                   <button 
                     className="btn-danger"
                     onClick={() => handleDeleteBlock(block.id)}
@@ -170,29 +188,38 @@ const BlocksPage: React.FC = () => {
       {/* Create Block Modal */}
       {showCreateForm && (
         <div className="modal-overlay">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h2>Crear Nuevo Bloque</h2>
-              <button 
-                className="btn-close"
-                onClick={() => setShowCreateForm(false)}
-              >
-                ×
-              </button>
-            </div>
-            <div className="modal-body">
-              <p>Funcionalidad de creación de bloques en desarrollo...</p>
-              <p>Por ahora, puedes ver y gestionar los bloques existentes.</p>
-            </div>
-            <div className="modal-footer">
-              <button 
-                className="btn-secondary"
-                onClick={() => setShowCreateForm(false)}
-              >
-                Cerrar
-              </button>
-            </div>
-          </div>
+          <CreateBlockForm
+            onSubmit={async (blockData) => {
+              try {
+                // Transform frontend data to backend format
+                const transformedData: TrainingBlockCreate = {
+                  name: blockData.name,
+                  duration: blockData.duration_weeks,
+                  total_weeks: blockData.duration_weeks,
+                  current_stage: 'Week 1',
+                  start_date: new Date().toISOString().split('T')[0], // Today
+                  end_date: new Date(Date.now() + blockData.duration_weeks * 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                  current_week: 1,
+                  rm_pullups: blockData.max_reps.pull_ups,
+                  rm_dips: blockData.max_reps.dips,
+                  rm_muscleups: blockData.max_reps.muscle_ups,
+                  rm_squats: blockData.max_reps.squats,
+                  strategy: blockData.strategy,
+                  weekly_increment: 5, // Default value
+                  deload_week: undefined,
+                  routines_by_day: {},
+                  increment_type: 'percentage',
+                  stages: []
+                };
+                
+                await createBlock(transformedData);
+                setShowCreateForm(false);
+              } catch (error) {
+                console.error('Error creating block:', error);
+              }
+            }}
+            onCancel={() => setShowCreateForm(false)}
+          />
         </div>
       )}
     </div>

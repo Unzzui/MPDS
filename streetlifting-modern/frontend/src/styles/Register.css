@@ -1,4 +1,14 @@
 /* Register - Terminal Style */
+
+/* Importar fuente Chopsic */
+@font-face {
+  font-family: 'Chopsic';
+  src: url('../assets/fonts/Chopsic 400.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 .register-page {
   min-height: 100vh;
   background-color: var(--bg-primary);
@@ -10,7 +20,8 @@
 }
 
 .register-container {
-  min-height: 100vh;
+  width: 100%;
+  max-width: 500px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -21,13 +32,13 @@
 
 .register-card {
   width: 100%;
-  max-width: 450px;
   background-color: var(--bg-secondary);
   border: 2px solid var(--accent-primary);
   border-radius: var(--radius-lg);
   padding: var(--spacing-xl);
   box-shadow: 0 8px 32px rgba(0, 255, 136, 0.1);
   backdrop-filter: blur(10px);
+  animation: fadeIn 0.5s ease-out;
 }
 
 .register-header {
@@ -36,18 +47,41 @@
 }
 
 .register-title {
-  font-size: 2rem;
-  font-weight: 900;
+  font-family: 'Chopsic', monospace;
+  font-size: 64px;
+  font-weight: 400;
   color: var(--accent-primary);
   margin-bottom: var(--spacing-sm);
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
 }
 
 .register-subtitle {
   color: var(--text-secondary);
+  font-size: 0.8rem;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: var(--spacing-lg);
+}
+
+.register-form-title {
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: var(--spacing-sm);
+}
+
+.register-description {
+  color: var(--text-secondary);
   font-size: 0.9rem;
   opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1.4;
 }
 
 .register-form {
@@ -56,6 +90,7 @@
 
 .form-group {
   margin-bottom: var(--spacing-md);
+  animation: fadeIn 0.3s ease-out;
 }
 
 .form-label {
@@ -63,7 +98,7 @@
   margin-bottom: var(--spacing-sm);
   color: var(--text-secondary);
   font-weight: 500;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-family: var(--font-mono);
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -89,6 +124,8 @@
 
 .form-input::placeholder {
   color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
 }
 
 .form-input:disabled {
@@ -111,6 +148,10 @@
   margin-bottom: var(--spacing-md);
   text-transform: uppercase;
   letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
 }
 
 .register-button:hover {
@@ -136,11 +177,24 @@
   font-size: 0.9rem;
 }
 
+.login-link {
+  margin-bottom: var(--spacing-lg);
+}
+
+.login-link p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .register-link {
   color: var(--accent-primary);
   text-decoration: none;
   font-weight: 600;
   transition: color 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .register-link:hover {
@@ -148,43 +202,79 @@
   text-decoration: underline;
 }
 
-.error-message {
-  background-color: rgba(255, 68, 68, 0.1);
-  border: 1px solid var(--text-error);
-  color: var(--text-error);
-  padding: var(--spacing-md);
-  border-radius: var(--radius-md);
-  margin-bottom: var(--spacing-md);
-  font-size: 0.9rem;
-  text-align: center;
-  font-family: var(--font-mono);
+.register-benefits {
+  border-top: 1px solid var(--border-primary);
+  padding-top: var(--spacing-lg);
 }
 
-.success-message {
-  background-color: rgba(0, 255, 136, 0.1);
-  border: 1px solid var(--text-success);
-  color: var(--text-success);
+.benefits-title {
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--spacing-md);
+}
+
+.benefits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.benefits-list li {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  margin-bottom: var(--spacing-sm);
+  padding-left: var(--spacing-md);
+  position: relative;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.benefits-list li:before {
+  content: '>';
+  position: absolute;
+  left: 0;
+  color: var(--accent-primary);
+  font-weight: bold;
+}
+
+.benefits-list li:last-child {
+  margin-bottom: 0;
+}
+
+.error-message {
+  background-color: rgba(255, 68, 68, 0.1);
+  border: 1px solid rgba(255, 68, 68, 0.3);
+  color: var(--text-error);
   padding: var(--spacing-md);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   margin-bottom: var(--spacing-md);
   font-size: 0.9rem;
-  text-align: center;
-  font-family: var(--font-mono);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.error-icon {
+  color: var(--text-error);
+  font-weight: bold;
 }
 
 .loading-spinner {
   display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 2px solid var(--bg-primary);
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
   border-radius: 50%;
-  border-top-color: transparent;
-  animation: spin 1s ease-in-out infinite;
-  margin-right: var(--spacing-sm);
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 @keyframes fadeIn {
@@ -198,16 +288,15 @@
   }
 }
 
-/* Password strength indicator */
 .password-strength {
-  margin-top: var(--spacing-sm);
+  margin-top: var(--spacing-xs);
 }
 
 .strength-bar {
   width: 100%;
   height: 4px;
-  background-color: var(--bg-tertiary);
-  border-radius: var(--radius-sm);
+  background-color: var(--border-primary);
+  border-radius: 2px;
   overflow: hidden;
   margin-bottom: var(--spacing-xs);
 }
@@ -215,7 +304,6 @@
 .strength-fill {
   height: 100%;
   transition: all 0.3s ease;
-  border-radius: var(--radius-sm);
 }
 
 .strength-fill.weak {
@@ -224,23 +312,23 @@
 }
 
 .strength-fill.fair {
-  background-color: var(--text-warning);
+  background-color: #ff9500;
   width: 50%;
 }
 
 .strength-fill.good {
-  background-color: var(--accent-secondary);
+  background-color: #ffcc00;
   width: 75%;
 }
 
 .strength-fill.strong {
-  background-color: var(--text-success);
+  background-color: var(--accent-primary);
   width: 100%;
 }
 
 .strength-text {
-  font-size: 0.8rem;
-  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -250,95 +338,87 @@
 }
 
 .strength-text.fair {
-  color: var(--text-warning);
+  color: #ff9500;
 }
 
 .strength-text.good {
-  color: var(--accent-secondary);
+  color: #ffcc00;
 }
 
 .strength-text.strong {
-  color: var(--text-success);
+  color: var(--accent-primary);
 }
 
-/* Form validation styles */
 .form-input.valid {
-  border-color: var(--text-success);
-  box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.1);
+  border-color: var(--accent-primary);
 }
 
 .form-input.invalid {
   border-color: var(--text-error);
-  box-shadow: 0 0 0 2px rgba(255, 68, 68, 0.1);
 }
 
 .validation-message {
-  font-size: 0.8rem;
-  font-family: var(--font-mono);
+  font-size: 0.7rem;
   margin-top: var(--spacing-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .validation-message.valid {
-  color: var(--text-success);
+  color: var(--accent-primary);
 }
 
 .validation-message.invalid {
   color: var(--text-error);
 }
 
-/* Terminal-style focus states */
 .register-container .btn:focus,
 .register-container .form-input:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--accent-primary);
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
 }
 
-/* Terminal-style selection */
 .register-page ::selection {
   background-color: var(--accent-primary);
   color: var(--bg-primary);
 }
 
-/* Mobile-first responsive design */
 @media (min-width: 640px) {
   .register-container {
-    padding: var(--spacing-2xl);
-    max-width: 500px;
+    padding: var(--spacing-lg);
   }
   
   .register-title {
-    font-size: 2.5rem;
+    font-size: 72px;
+    letter-spacing: 4px;
   }
 }
 
 @media (min-width: 768px) {
   .register-container {
-    max-width: 550px;
+    padding: var(--spacing-xl);
   }
   
   .register-title {
-    font-size: 3rem;
+    font-size: 80px;
+    letter-spacing: 5px;
   }
 }
 
-/* Terminal-style loading states */
 .register-button:disabled .loading-spinner {
   animation: spin 1s linear infinite;
 }
 
-/* Terminal-style hover effects */
 .register-container:hover {
-  box-shadow: var(--shadow-lg), 0 0 20px rgba(0, 255, 136, 0.1);
+  transform: none;
 }
 
 .form-input:hover {
-  border-color: var(--border-secondary);
+  border-color: var(--accent-primary);
 }
 
-/* Terminal-style animations for form elements */
 .form-group {
-  animation: fadeIn 0.3s ease-out;
-  animation-fill-mode: both;
+  animation: fadeIn 0.5s ease-out forwards;
 }
 
 .form-group:nth-child(1) { animation-delay: 0.1s; }
@@ -346,36 +426,32 @@
 .form-group:nth-child(3) { animation-delay: 0.3s; }
 .form-group:nth-child(4) { animation-delay: 0.4s; }
 
-/* Terminal-style keyboard navigation */
 .register-container .btn:focus-visible,
 .register-container .form-input:focus-visible {
   outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
 }
 
-/* Terminal-style error states */
 .form-input.error {
   border-color: var(--text-error);
-  box-shadow: 0 0 0 2px rgba(255, 68, 68, 0.1);
+  background-color: rgba(255, 68, 68, 0.05);
 }
 
 .form-input.error:focus {
   border-color: var(--text-error);
-  box-shadow: 0 0 0 2px rgba(255, 68, 68, 0.2);
+  box-shadow: 0 0 0 3px rgba(255, 68, 68, 0.1);
 }
 
-/* Terminal-style success states */
 .form-input.success {
-  border-color: var(--text-success);
-  box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.1);
+  border-color: var(--accent-primary);
+  background-color: rgba(0, 255, 136, 0.05);
 }
 
 .form-input.success:focus {
-  border-color: var(--text-success);
-  box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.2);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
 }
 
-/* Responsive Design */
 @media (max-width: 480px) {
   .register-container {
     padding: var(--spacing-sm);
@@ -386,6 +462,39 @@
   }
   
   .register-title {
-    font-size: 1.75rem;
+    font-size: 56px;
+    letter-spacing: 2px;
+  }
+  
+  .register-subtitle {
+    font-size: 0.7rem;
+  }
+  
+  .form-input {
+    padding: var(--spacing-sm);
+  }
+  
+  .register-button {
+    padding: var(--spacing-sm);
+  }
+  
+  .benefits-list li {
+    font-size: 0.7rem;
+    margin-bottom: var(--spacing-xs);
+  }
+}
+
+@media (min-width: 768px) {
+  .register-card {
+    padding: var(--spacing-2xl);
+  }
+  
+  .register-title {
+    font-size: 88px;
+    letter-spacing: 6px;
+  }
+  
+  .register-subtitle {
+    font-size: 0.9rem;
   }
 } 

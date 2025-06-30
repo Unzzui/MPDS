@@ -1,9 +1,67 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useUserProfile } from '../contexts/BodyWeightContext';
 import '../styles/Profile.css';
+
+// Terminal-style SVG Icons
+const UserIcon = () => (
+  <svg className="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+  </svg>
+);
+
+const EmailIcon = () => (
+  <svg className="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+  </svg>
+);
+
+const CalendarIcon = () => (
+  <svg className="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+  </svg>
+);
+
+const LockIcon = () => (
+  <svg className="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+  </svg>
+);
+
+const EyeIcon = () => (
+  <svg className="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+  </svg>
+);
+
+const EyeOffIcon = () => (
+  <svg className="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
+  </svg>
+);
+
+const SaveIcon = () => (
+  <svg className="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+  </svg>
+);
+
+const WeightIcon = () => (
+  <svg className="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+  </svg>
+);
+
+const TargetIcon = () => (
+  <svg className="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+  </svg>
+);
 
 const ProfilePage: React.FC = () => {
   const { user, logout } = useAuth();
+  const { userProfile, bodyWeight } = useUserProfile();
   const [showPassword, setShowPassword] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -28,26 +86,26 @@ const ProfilePage: React.FC = () => {
     const newErrors: Record<string, string> = {};
 
     if (!formData.username.trim()) {
-      newErrors.username = 'Username is required';
+      newErrors.username = 'USERNAME IS REQUIRED';
     } else if (formData.username.length < 3) {
-      newErrors.username = 'Username must be at least 3 characters';
+      newErrors.username = 'USERNAME MUST BE AT LEAST 3 CHARACTERS';
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = 'EMAIL IS REQUIRED';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
+      newErrors.email = 'EMAIL IS INVALID';
     }
 
     if (formData.newPassword) {
       if (!formData.currentPassword) {
-        newErrors.currentPassword = 'Current password is required to change password';
+        newErrors.currentPassword = 'CURRENT PASSWORD IS REQUIRED TO CHANGE PASSWORD';
       }
       if (formData.newPassword.length < 6) {
-        newErrors.newPassword = 'New password must be at least 6 characters';
+        newErrors.newPassword = 'NEW PASSWORD MUST BE AT LEAST 6 CHARACTERS';
       }
       if (formData.newPassword !== formData.confirmPassword) {
-        newErrors.confirmPassword = 'Passwords do not match';
+        newErrors.confirmPassword = 'PASSWORDS DO NOT MATCH';
       }
     }
 
@@ -80,256 +138,335 @@ const ProfilePage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="profile-page">
       {/* Header */}
-      <div className="bg-gray-800 rounded-lg p-6">
-        <h1 className="text-2xl font-bold text-white mb-2">Profile</h1>
-        <p className="text-gray-400">
+      <div className="profile-header">
+        <h1 className="profile-title">PROFILE</h1>
+        <p className="profile-subtitle">
           Manage your account settings and personal information
         </p>
       </div>
 
-      {/* Profile Form */}
-      <div className="bg-gray-800 rounded-lg p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-semibold text-white">Personal Information</h2>
+      {/* Personal Information Section */}
+      <div className="profile-section">
+        <div className="section-header">
+          <h2 className="section-title">PERSONAL INFORMATION</h2>
           {!isEditing && (
             <button
               onClick={() => setIsEditing(true)}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+              className="edit-btn"
             >
-              Edit Profile
+              EDIT PROFILE
             </button>
           )}
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit}>
           {/* Username */}
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Username
+          <div className="form-group">
+            <label className="form-label">
+              USERNAME
             </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-              </div>
+            <div className="input-wrapper">
+              <UserIcon />
               <input
                 type="text"
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
                 disabled={!isEditing}
-                className={`w-full pl-10 pr-3 py-2 border ${
-                  errors.username ? 'border-red-500' : 'border-gray-600'
-                } rounded-md text-white bg-gray-700 focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed`}
+                className={`form-input ${errors.username ? 'error' : ''}`}
                 placeholder="Enter your username"
               />
             </div>
             {errors.username && (
-              <p className="mt-1 text-sm text-red-500">{errors.username}</p>
+              <p className="error-message">{errors.username}</p>
             )}
           </div>
 
           {/* Email */}
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Email Address
+          <div className="form-group">
+            <label className="form-label">
+              EMAIL ADDRESS
             </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9 9.003 9.003 0 008.5-6z" />
-                </svg>
-              </div>
+            <div className="input-wrapper">
+              <EmailIcon />
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
                 disabled={!isEditing}
-                className={`w-full pl-10 pr-3 py-2 border ${
-                  errors.email ? 'border-red-500' : 'border-gray-600'
-                } rounded-md text-white bg-gray-700 focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed`}
+                className={`form-input ${errors.email ? 'error' : ''}`}
                 placeholder="Enter your email"
               />
             </div>
             {errors.email && (
-              <p className="mt-1 text-sm text-red-500">{errors.email}</p>
+              <p className="error-message">{errors.email}</p>
             )}
           </div>
 
           {/* Account Created */}
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Account Created
+          <div className="form-group">
+            <label className="form-label">
+              ACCOUNT CREATED
             </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                </svg>
-              </div>
+            <div className="input-wrapper">
+              <CalendarIcon />
               <input
                 type="text"
                 value={user?.created_at ? new Date(user.created_at).toLocaleDateString() : 'N/A'}
                 disabled
-                className="w-full pl-10 pr-3 py-2 border border-gray-600 rounded-md text-white bg-gray-700 opacity-50 cursor-not-allowed"
+                className="form-input"
               />
             </div>
           </div>
 
-          {/* Password Change Section */}
-          {isEditing && (
-            <div className="border-t border-gray-700 pt-6">
-              <h3 className="text-md font-semibold text-white mb-4">Change Password</h3>
-              
-              {/* Current Password */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Current Password
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-4a2 2 0 00-2-2H6a2 2 0 00-2 2v4a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4a2 2 0 002 2h2a2 2 0 002-2zm0 0h2a2 2 0 002-2v-2a2 2 0 00-2-2h-2a2 2 0 00-2 2z" />
-                    </svg>
-                  </div>
-                  <input
-                    type="password"
-                    name="currentPassword"
-                    value={formData.currentPassword}
-                    onChange={handleChange}
-                    className={`w-full pl-10 pr-3 py-2 border ${
-                      errors.currentPassword ? 'border-red-500' : 'border-gray-600'
-                    } rounded-md text-white bg-gray-700 focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
-                    placeholder="Enter current password"
-                  />
-                </div>
-                {errors.currentPassword && (
-                  <p className="mt-1 text-sm text-red-500">{errors.currentPassword}</p>
-                )}
-              </div>
-
-              {/* New Password */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  New Password
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-4a2 2 0 00-2-2H6a2 2 0 00-2 2v4a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4a2 2 0 002 2h2a2 2 0 002-2zm0 0h2a2 2 0 002-2v-2a2 2 0 00-2-2h-2a2 2 0 00-2 2z" />
-                    </svg>
-                  </div>
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    name="newPassword"
-                    value={formData.newPassword}
-                    onChange={handleChange}
-                    className={`w-full pl-10 pr-10 py-2 border ${
-                      errors.newPassword ? 'border-red-500' : 'border-gray-600'
-                    } rounded-md text-white bg-gray-700 focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
-                    placeholder="Enter new password"
-                  />
-                  <button
-                    type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 12a3 3 0 100-6 3 3 0 000 6z" />
-                      </svg>
-                    ) : (
-                      <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 12a3 3 0 100-6 3 3 0 000 6z" />
-                      </svg>
-                    )}
-                  </button>
-                </div>
-                {errors.newPassword && (
-                  <p className="mt-1 text-sm text-red-500">{errors.newPassword}</p>
-                )}
-              </div>
-
-              {/* Confirm Password */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Confirm New Password
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-4a2 2 0 00-2-2H6a2 2 0 00-2 2v4a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4a2 2 0 002 2h2a2 2 0 002-2zm0 0h2a2 2 0 002-2v-2a2 2 0 00-2-2h-2a2 2 0 00-2 2z" />
-                    </svg>
-                  </div>
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    className={`w-full pl-10 pr-3 py-2 border ${
-                      errors.confirmPassword ? 'border-red-500' : 'border-gray-600'
-                    } rounded-md text-white bg-gray-700 focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
-                    placeholder="Confirm new password"
-                  />
-                </div>
-                {errors.confirmPassword && (
-                  <p className="mt-1 text-sm text-red-500">{errors.confirmPassword}</p>
-                )}
-              </div>
-            </div>
-          )}
-
           {/* Action Buttons */}
           {isEditing && (
-            <div className="flex space-x-4 pt-6 border-t border-gray-700">
+            <div className="action-buttons">
               <button
                 type="button"
                 onClick={handleCancel}
-                className="flex-1 px-4 py-2 border border-gray-600 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors"
+                className="cancel-btn"
               >
-                Cancel
+                CANCEL
               </button>
               <button
                 type="submit"
-                className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors flex items-center justify-center"
+                className="save-btn"
               >
-                <svg className="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                Save Changes
+                <SaveIcon />
+                SAVE CHANGES
               </button>
             </div>
           )}
         </form>
       </div>
 
+      {/* Training Configuration Section */}
+      {userProfile && (
+        <div className="profile-section">
+          <div className="section-header">
+            <h2 className="section-title">TRAINING CONFIGURATION</h2>
+          </div>
+
+          {/* Physical Data */}
+          <div className="config-grid">
+            <div className="form-group">
+              <label className="form-label">
+                BODY WEIGHT
+              </label>
+              <div className="input-wrapper">
+                <WeightIcon />
+                <input
+                  type="text"
+                  value={userProfile.bodyWeight ? `${userProfile.bodyWeight} kg` : 'Not set'}
+                  disabled
+                  className="form-input"
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">
+                HEIGHT
+              </label>
+              <div className="input-wrapper">
+                <TargetIcon />
+                <input
+                  type="text"
+                  value={userProfile.height ? `${userProfile.height} cm` : 'Not set'}
+                  disabled
+                  className="form-input"
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">
+                AGE
+              </label>
+              <div className="input-wrapper">
+                <UserIcon />
+                <input
+                  type="text"
+                  value={userProfile.age ? `${userProfile.age} years` : 'Not set'}
+                  disabled
+                  className="form-input"
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">
+                GENDER
+              </label>
+              <div className="input-wrapper">
+                <UserIcon />
+                <input
+                  type="text"
+                  value={userProfile.gender ? userProfile.gender.charAt(0).toUpperCase() + userProfile.gender.slice(1) : 'Not set'}
+                  disabled
+                  className="form-input"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* One Rep Max Data */}
+          <div className="config-section">
+            <h3 className="config-subtitle">ONE REP MAX (1RM)</h3>
+            <div className="rm-grid">
+              <div className="form-group">
+                <label className="form-label">MUSCLE UPS</label>
+                <div className="input-wrapper">
+                  <WeightIcon />
+                  <input
+                    type="text"
+                    value={userProfile.maxReps.muscle_ups ? `${userProfile.maxReps.muscle_ups} kg` : 'Not set'}
+                    disabled
+                    className="form-input"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">PULL UPS</label>
+                <div className="input-wrapper">
+                  <WeightIcon />
+                  <input
+                    type="text"
+                    value={userProfile.maxReps.pull_ups ? `${userProfile.maxReps.pull_ups} kg` : 'Not set'}
+                    disabled
+                    className="form-input"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">DIPS</label>
+                <div className="input-wrapper">
+                  <WeightIcon />
+                  <input
+                    type="text"
+                    value={userProfile.maxReps.dips ? `${userProfile.maxReps.dips} kg` : 'Not set'}
+                    disabled
+                    className="form-input"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">SQUATS</label>
+                <div className="input-wrapper">
+                  <WeightIcon />
+                  <input
+                    type="text"
+                    value={userProfile.maxReps.squats ? `${userProfile.maxReps.squats} kg` : 'Not set'}
+                    disabled
+                    className="form-input"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Training Preferences */}
+          <div className="config-section">
+            <h3 className="config-subtitle">TRAINING PREFERENCES</h3>
+            <div className="config-grid">
+              <div className="form-group">
+                <label className="form-label">EXPERIENCE LEVEL</label>
+                <div className="input-wrapper">
+                  <TargetIcon />
+                  <input
+                    type="text"
+                    value={userProfile.experienceLevel ? userProfile.experienceLevel.charAt(0).toUpperCase() + userProfile.experienceLevel.slice(1) : 'Not set'}
+                    disabled
+                    className="form-input"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">TRAINING FREQUENCY</label>
+                <div className="input-wrapper">
+                  <CalendarIcon />
+                  <input
+                    type="text"
+                    value={userProfile.trainingFrequency ? `${userProfile.trainingFrequency} times/week` : 'Not set'}
+                    disabled
+                    className="form-input"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">PREFERRED TIME</label>
+                <div className="input-wrapper">
+                  <CalendarIcon />
+                  <input
+                    type="text"
+                    value={userProfile.preferredTrainingTime ? userProfile.preferredTrainingTime.charAt(0).toUpperCase() + userProfile.preferredTrainingTime.slice(1) : 'Not set'}
+                    disabled
+                    className="form-input"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">SESSION DURATION</label>
+                <div className="input-wrapper">
+                  <CalendarIcon />
+                  <input
+                    type="text"
+                    value={userProfile.maxSessionDuration ? `${userProfile.maxSessionDuration} minutes` : 'Not set'}
+                    disabled
+                    className="form-input"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Training Goals */}
+          {userProfile.trainingGoals && userProfile.trainingGoals.length > 0 && (
+            <div className="config-section">
+              <h3 className="config-subtitle">TRAINING GOALS</h3>
+              <div className="goals-list">
+                {userProfile.trainingGoals.map((goal: string, index: number) => (
+                  <div key={index} className="goal-item">
+                    <span className="goal-text">{goal.charAt(0).toUpperCase() + goal.slice(1)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Danger Zone */}
-      <div className="bg-gray-800 rounded-lg p-6 border border-red-500/20">
-        <h2 className="text-lg font-semibold text-white mb-4">Danger Zone</h2>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="font-medium text-white">Logout</h3>
-              <p className="text-sm text-gray-400">Sign out of your account</p>
+      <div className="danger-zone">
+        <h2 className="danger-title">DANGER ZONE</h2>
+        <div>
+          <div className="danger-item">
+            <div className="danger-info">
+              <h3>LOGOUT</h3>
+              <p>Sign out of your account</p>
             </div>
             <button
               onClick={logout}
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors"
+              className="danger-btn"
             >
-              Logout
+              LOGOUT
             </button>
           </div>
           
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="font-medium text-white">Delete Account</h3>
-              <p className="text-sm text-gray-400">Permanently delete your account and all data</p>
+          <div className="danger-item">
+            <div className="danger-info">
+              <h3>DELETE ACCOUNT</h3>
+              <p>Permanently delete your account and all data</p>
             </div>
             <button
               onClick={() => {
@@ -338,9 +475,9 @@ const ProfilePage: React.FC = () => {
                   console.log('Deleting account...');
                 }
               }}
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors"
+              className="danger-btn"
             >
-              Delete Account
+              DELETE ACCOUNT
             </button>
           </div>
         </div>
@@ -349,4 +486,4 @@ const ProfilePage: React.FC = () => {
   );
 };
 
-export default ProfilePage; 
+export default ProfilePage;

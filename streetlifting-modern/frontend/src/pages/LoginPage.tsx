@@ -23,7 +23,6 @@ const LoginPage: React.FC = () => {
     try {
       await login(credentials);
       console.log('Login successful, navigating to dashboard');
-      navigate('/dashboard');
     } catch (err) {
       console.error('Login error:', err);
       setError('Credenciales inválidas. Intenta de nuevo.');

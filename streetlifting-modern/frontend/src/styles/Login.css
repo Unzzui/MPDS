@@ -1,4 +1,14 @@
 /* Login - Terminal Style */
+
+/* Importar fuente Chopsic */
+@font-face {
+  font-family: 'Chopsic';
+  src: url('../assets/fonts/Chopsic 400.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 .login-page {
   min-height: 100vh;
   background-color: var(--bg-primary);
@@ -40,24 +50,24 @@
 }
 
 .login-title {
-  font-size: 2.5rem;
-  font-weight: 900;
+  font-family: 'Chopsic', monospace;
+  font-size: 64px;
+  font-weight: 400;
   color: var(--accent-primary);
   margin: 0;
-  letter-spacing: 4px;
+  letter-spacing: 3px;
   text-transform: uppercase;
-  font-family: 'Courier New', monospace;
   text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
 }
 
 .login-subtitle {
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 600;
   color: var(--text-secondary);
   margin: var(--spacing-xs) 0 0 0;
   text-transform: uppercase;
   letter-spacing: 2px;
-  font-family: 'Courier New', monospace;
+  font-family: var(--font-mono);
 }
 
 .login-description {
@@ -200,13 +210,12 @@
 
 .link:hover {
   color: var(--accent-secondary);
-  text-decoration: underline;
 }
 
 .error-message {
-  background-color: rgba(255, 59, 48, 0.1);
-  border: 1px solid rgba(255, 59, 48, 0.3);
-  color: #ff3b30;
+  background-color: rgba(255, 68, 68, 0.1);
+  border: 1px solid rgba(255, 68, 68, 0.3);
+  color: var(--text-error);
   padding: var(--spacing-md);
   border-radius: var(--radius-md);
   margin-bottom: var(--spacing-lg);
@@ -216,29 +225,29 @@
 
 .success-message {
   background-color: rgba(0, 255, 136, 0.1);
-  border: 1px solid var(--text-success);
-  color: var(--text-success);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  color: var(--accent-primary);
   padding: var(--spacing-md);
   border-radius: var(--radius-md);
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
   font-size: 0.9rem;
   text-align: center;
-  font-family: var(--font-mono);
 }
 
 .loading-spinner {
   display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 2px solid var(--bg-primary);
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
   border-radius: 50%;
-  border-top-color: transparent;
-  animation: spin 1s ease-in-out infinite;
-  margin-right: var(--spacing-sm);
+  animation: spin 1s linear infinite;
+  margin-right: var(--spacing-xs);
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 @keyframes fadeIn {
@@ -252,28 +261,24 @@
   }
 }
 
-/* Terminal-style focus states */
 .login-container .btn:focus,
 .login-container .form-input:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--accent-primary);
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
 }
 
-/* Terminal-style selection */
 .login-page ::selection {
   background-color: var(--accent-primary);
   color: var(--bg-primary);
 }
 
-/* Mobile-first responsive design */
 @media (min-width: 640px) {
   .login-container {
-    padding: var(--spacing-2xl);
-    max-width: 450px;
+    padding: var(--spacing-lg);
   }
   
   .login-header h1 {
-    font-size: 3.5rem;
+    font-size: 3rem;
   }
   
   .login-header h2 {
@@ -283,68 +288,61 @@
 
 @media (min-width: 768px) {
   .login-container {
-    max-width: 500px;
+    padding: var(--spacing-xl);
   }
   
   .login-header h1 {
-    font-size: 4rem;
+    font-size: 72px;
+    letter-spacing: 4px;
   }
 }
 
-/* Terminal-style loading states */
 .login-button:disabled .loading-spinner {
   animation: spin 1s linear infinite;
 }
 
-/* Terminal-style hover effects */
 .login-container:hover {
-  box-shadow: var(--shadow-lg), 0 0 20px rgba(0, 255, 136, 0.1);
+  transform: none;
 }
 
 .form-input:hover {
-  border-color: var(--border-secondary);
+  border-color: var(--accent-primary);
 }
 
-/* Terminal-style animations for form elements */
 .form-group {
-  animation: fadeIn 0.3s ease-out;
-  animation-fill-mode: both;
+  animation: fadeIn 0.5s ease-out forwards;
 }
 
 .form-group:nth-child(1) { animation-delay: 0.1s; }
 .form-group:nth-child(2) { animation-delay: 0.2s; }
 .form-group:nth-child(3) { animation-delay: 0.3s; }
 
-/* Terminal-style keyboard navigation */
 .login-container .btn:focus-visible,
 .login-container .form-input:focus-visible {
   outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
 }
 
-/* Terminal-style error states */
 .form-input.error {
   border-color: var(--text-error);
-  box-shadow: 0 0 0 2px rgba(255, 68, 68, 0.1);
+  background-color: rgba(255, 68, 68, 0.05);
 }
 
 .form-input.error:focus {
   border-color: var(--text-error);
-  box-shadow: 0 0 0 2px rgba(255, 68, 68, 0.2);
+  box-shadow: 0 0 0 3px rgba(255, 68, 68, 0.1);
 }
 
-/* Terminal-style success states */
 .form-input.success {
-  border-color: var(--text-success);
-  box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.1);
+  border-color: var(--accent-primary);
+  background-color: rgba(0, 255, 136, 0.05);
 }
 
 .form-input.success:focus {
-  border-color: var(--text-success);
-  box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.2);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
 }
 
-/* Responsive Design */
 @media (max-width: 480px) {
   .login-container {
     padding: var(--spacing-sm);
@@ -352,27 +350,23 @@
   
   .login-card {
     padding: var(--spacing-lg);
-    border-width: 1px;
   }
   
   .login-title {
-    font-size: 2rem;
-    letter-spacing: 3px;
+    font-size: 56px;
+    letter-spacing: 2px;
   }
   
   .login-subtitle {
-    font-size: 0.9rem;
-    letter-spacing: 1.5px;
+    font-size: 1rem;
   }
   
   .form-input {
     padding: var(--spacing-sm);
-    font-size: 0.9rem;
   }
   
   .login-button {
     padding: var(--spacing-sm);
-    font-size: 0.9rem;
   }
   
   .demo-credentials {
@@ -380,19 +374,18 @@
   }
   
   .demo-info {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
   }
 }
 
 @media (max-width: 360px) {
   .login-title {
-    font-size: 1.8rem;
-    letter-spacing: 2px;
+    font-size: 48px;
+    letter-spacing: 1.5px;
   }
   
   .login-subtitle {
-    font-size: 0.8rem;
-    letter-spacing: 1px;
+    font-size: 0.9rem;
   }
   
   .login-card {
@@ -400,7 +393,6 @@
   }
 }
 
-/* Focus and selection styles */
 .login-card ::selection {
   background-color: var(--accent-primary);
   color: var(--bg-primary);
@@ -416,20 +408,18 @@
   outline-offset: 2px;
 }
 
-/* Loading animation */
 .login-button:disabled::after {
   content: '';
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  border: 2px solid transparent;
-  border-top: 2px solid currentColor;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-left: var(--spacing-xs);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-md);
+  pointer-events: none;
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  to { transform: rotate(360deg); }
 } 

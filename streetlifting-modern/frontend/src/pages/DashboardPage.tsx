@@ -1,77 +1,87 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useUserProfile } from '../contexts/BodyWeightContext';
+// import { useAdaptation } from '../contexts/AdaptationContext'; // Temporarily disabled
 import { useWorkouts } from '../hooks/useWorkouts';
-import { useRoutines } from '../hooks/useRoutines';
+import { useOneRepMaxes } from '../hooks/useOneRepMaxes';
+import { useBlocks } from '../hooks/useBlocks';
+import LoadingSpinner from '../components/LoadingSpinner';
+// import { InteractionType } from '../types/adaptation'; // Temporarily disabled
 import '../styles/Dashboard.css';
 
 // SVG Icons
 const WorkoutIcon = () => (
-  <svg className="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+  <svg className="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
   </svg>
 );
 
 const StatsIcon = () => (
-  <svg className="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+  <svg className="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M3 3v18h18"/>
+    <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
   </svg>
 );
 
 const HistoryIcon = () => (
-  <svg className="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+  <svg className="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
   </svg>
 );
 
 const RMIcon = () => (
-  <svg className="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 002.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 012.916.52 6.003 6.003 0 01-5.395 4.972m0 0a6.726 6.726 0 01-2.749 1.35m0 0a6.772 6.772 0 01-3.044 0" />
+  <svg className="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
   </svg>
 );
 
 const PlusIcon = () => (
-  <svg className="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+  <svg className="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M12 5v14M5 12h14"/>
   </svg>
 );
 
 const CalendarIcon = () => (
-  <svg className="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+  <svg className="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/>
+  </svg>
+);
+
+const ProgramIcon = () => (
+  <svg className="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2M13 13h4-4zM13 17h4-4zM13 9h4-4z"/>
   </svg>
 );
 
 const ChartIcon = () => (
-  <svg className="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+  <svg className="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M3 3v18h18"/>
+    <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
   </svg>
 );
 
 const WeightIcon = () => (
-  <svg className="workout-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 002.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 012.916.52 6.003 6.003 0 01-5.395 4.972m0 0a6.726 6.726 0 01-2.749 1.35m0 0a6.772 6.772 0 01-3.044 0" />
+  <svg className="workout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M6 3h12l4 6-10 13L2 9z"/>
   </svg>
 );
 
 const TimeIcon = () => (
-  <svg className="workout-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+  <svg className="workout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
   </svg>
 );
 
 const EmptyIcon = () => (
-  <svg className="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
+  <svg className="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M9 12h6M12 9v6"/>
   </svg>
 );
 
 const RoutinesIcon = () => (
-  <svg className="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M9 11H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M16 2h4a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-4"/>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M9 21H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h4"/>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M16 21h4a2 2 0 0 1 2-2v-4a2 2 0 0 1-2-2h-4"/>
+  <svg className="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M9 12h6M12 9v6"/>
   </svg>
 );
 
@@ -98,8 +108,27 @@ interface RMData {
 
 const DashboardPage: React.FC = () => {
   const { user } = useAuth();
+  const { userProfile } = useUserProfile();
+  // const { trackInteraction } = useAdaptation(); // Temporarily disabled
+  
+  // Track dashboard visit - Temporarily disabled
+  /*
+  useEffect(() => {
+    if (user) {
+      trackInteraction({
+        interaction_type: InteractionType.PAGE_VISIT,
+        interaction_data: {
+          page: 'dashboard',
+          timestamp: new Date().toISOString()
+        }
+      }).catch(console.error);
+    }
+  }, [user, trackInteraction]);
+  */
   const { workouts } = useWorkouts();
-  const { activeRoutines, isLoadingRoutines } = useRoutines();
+  const { latestOneRepMaxes, isLoadingOneRepMaxes } = useOneRepMaxes();
+  const { currentBlock, isLoadingCurrentBlock } = useBlocks();
+  
   const [stats, setStats] = useState<DashboardStats>({
     totalWorkouts: 0,
     thisWeek: 0,
@@ -107,59 +136,144 @@ const DashboardPage: React.FC = () => {
     totalVolume: 0
   });
   const [recentWorkouts, setRecentWorkouts] = useState<RecentWorkout[]>([]);
-  const [rmData, setRmData] = useState<RMData[]>([]);
+
+  // Memoize stats calculation to prevent unnecessary recalculations
+  const calculatedStats = useMemo(() => {
+    if (!workouts) {
+      return {
+        totalWorkouts: 0,
+        thisWeek: 0,
+        thisMonth: 0,
+        totalVolume: 0
+      };
+    }
+
+    const now = new Date();
+    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+    const totalWorkouts = workouts.length;
+    const thisWeek = workouts.filter(w => new Date(w.date) >= weekAgo).length;
+    const thisMonth = workouts.filter(w => new Date(w.date) >= monthAgo).length;
+    
+    // Calculate total volume from exercises
+    const totalVolume = workouts.reduce((sum, w) => {
+      if (!w.exercises || !Array.isArray(w.exercises)) return sum;
+      return sum + w.exercises.reduce((exerciseSum, e) => {
+        return exerciseSum + (e.weight * e.reps);
+      }, 0);
+    }, 0);
+
+    return { totalWorkouts, thisWeek, thisMonth, totalVolume };
+  }, [workouts]);
+
+  // Memoize recent workouts calculation
+  const calculatedRecentWorkouts = useMemo(() => {
+    if (!workouts) return [];
+
+    return workouts
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, 5)
+      .map(w => {
+        // Calculate total weight from exercises
+        const totalWeight = w.exercises && Array.isArray(w.exercises) 
+          ? w.exercises.reduce((sum, e) => sum + (e.weight * e.reps), 0)
+          : 0;
+        
+        // Get main exercise name or use day_type
+        const mainExercise = w.exercises && w.exercises.length > 0 
+          ? w.exercises[0]?.name 
+          : w.day_type;
+        
+        return {
+          id: w.id,
+          name: mainExercise,
+          date: new Date(w.date).toLocaleDateString(),
+          totalWeight: totalWeight,
+          duration: 60 // Mock duration for now
+        };
+      });
+  }, [workouts]);
+
+  // Memoize RM data calculation
+  const calculatedRmData = useMemo(() => {
+    if (latestOneRepMaxes && latestOneRepMaxes.length > 0) {
+      // Define the preferred order for exercises (matching backend format)
+      const exerciseOrder = ['Muscle Up', 'Pull Up', 'Dip', 'Squat'];
+      
+      // Convert real 1RM data to dashboard format and sort by preferred order
+      const result = latestOneRepMaxes
+        .map(rm => ({
+          exercise: rm.exercise,
+          initial: Math.round(rm.one_rm * 0.85), // Estimate initial as 85% of current
+          hypothetical: rm.one_rm
+        }))
+        .sort((a, b) => {
+          const aIndex = exerciseOrder.indexOf(a.exercise);
+          const bIndex = exerciseOrder.indexOf(b.exercise);
+          // If both exercises are in the preferred order, sort by that order
+          if (aIndex !== -1 && bIndex !== -1) {
+            return aIndex - bIndex;
+          }
+          // If only one is in the preferred order, prioritize it
+          if (aIndex !== -1) return -1;
+          if (bIndex !== -1) return 1;
+          // If neither is in the preferred order, sort alphabetically
+          return a.exercise.localeCompare(b.exercise);
+        });
+      
+      return result;
+    } else if (userProfile && userProfile.maxReps) {
+      // Use data from user profile (initial setup)
+      const exerciseOrder = ['Muscle Up', 'Pull Up', 'Dip', 'Squat'];
+      
+      const result = [
+        { 
+          exercise: 'Muscle Up', 
+          initial: userProfile.maxReps.muscle_ups, 
+          hypothetical: userProfile.maxReps.muscle_ups 
+        },
+        { 
+          exercise: 'Pull Up', 
+          initial: userProfile.maxReps.pull_ups, 
+          hypothetical: userProfile.maxReps.pull_ups 
+        },
+        { 
+          exercise: 'Dip', 
+          initial: userProfile.maxReps.dips, 
+          hypothetical: userProfile.maxReps.dips 
+        },
+        { 
+          exercise: 'Squat', 
+          initial: userProfile.maxReps.squats, 
+          hypothetical: userProfile.maxReps.squats 
+        }
+      ].sort((a, b) => {
+        const aIndex = exerciseOrder.indexOf(a.exercise);
+        const bIndex = exerciseOrder.indexOf(b.exercise);
+        return aIndex - bIndex;
+      });
+      
+      return result;
+    } else {
+      // Fallback to mock data if no real data exists
+      return [
+        { exercise: 'Muscle Up', initial: 15, hypothetical: 15 },
+        { exercise: 'Pull Up', initial: 50, hypothetical: 50 },
+        { exercise: 'Dip', initial: 70, hypothetical: 70 },
+        { exercise: 'Squat', initial: 110, hypothetical: 110 }
+      ];
+    }
+  }, [latestOneRepMaxes, userProfile]);
+
+  // Update state when calculated values change
+  useEffect(() => {
+    setStats(calculatedStats);
+  }, [calculatedStats]);
 
   useEffect(() => {
-    if (workouts) {
-      // Calculate stats
-      const now = new Date();
-      const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-
-      const totalWorkouts = workouts.length;
-      const thisWeek = workouts.filter(w => new Date(w.date) >= weekAgo).length;
-      const thisMonth = workouts.filter(w => new Date(w.date) >= monthAgo).length;
-      
-      // Calculate total volume from exercises
-      const totalVolume = workouts.reduce((sum, w) => {
-        return sum + w.exercises.reduce((exerciseSum, e) => {
-          return exerciseSum + (e.weight * e.reps);
-        }, 0);
-      }, 0);
-
-      setStats({ totalWorkouts, thisWeek, thisMonth, totalVolume });
-
-      // Get recent workouts
-      const recent = workouts
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-        .slice(0, 5)
-        .map(w => {
-          // Calculate total weight from exercises
-          const totalWeight = w.exercises.reduce((sum, e) => sum + (e.weight * e.reps), 0);
-          
-          // Get main exercise name or use day_type
-          const mainExercise = w.exercises[0]?.name || w.day_type;
-          
-          return {
-            id: w.id,
-            name: mainExercise,
-            date: new Date(w.date).toLocaleDateString(),
-            totalWeight: totalWeight,
-            duration: 60 // Mock duration for now
-          };
-        });
-
-      setRecentWorkouts(recent);
-
-      // Mock RM data
-      setRmData([
-        { exercise: 'SQUAT', initial: 100, hypothetical: 120 },
-        { exercise: 'BENCH', initial: 80, hypothetical: 95 },
-        { exercise: 'DEADLIFT', initial: 140, hypothetical: 165 },
-        { exercise: 'OVERHEAD', initial: 60, hypothetical: 70 }
-      ]);
-    }
-  }, [workouts]);
+    setRecentWorkouts(calculatedRecentWorkouts);
+  }, [calculatedRecentWorkouts]);
 
   const formatWeight = (weight: number) => {
     return `${weight}kg`;
@@ -210,6 +324,55 @@ const DashboardPage: React.FC = () => {
           </div>
         </div>
 
+        {/* Active Training Block Section */}
+        {currentBlock && (
+          <div className="dashboard-section block-section">
+            <div className="section-header">
+              <h2 className="section-title">BLOQUE ACTIVO</h2>
+              <ProgramIcon />
+            </div>
+            <div className="section-content">
+              Tu programa de entrenamiento actual
+            </div>
+            <div className="block-info">
+              <div className="block-header">
+                <h3 className="block-name">{currentBlock.name}</h3>
+                <span className="block-status">En Progreso</span>
+              </div>
+              <div className="block-progress">
+                <div className="progress-info">
+                  <span>Semana {currentBlock.current_week} de {currentBlock.total_weeks}</span>
+                  <span>{Math.round((currentBlock.current_week / currentBlock.total_weeks) * 100)}%</span>
+                </div>
+                <div className="progress-bar">
+                  <div 
+                    className="progress-fill" 
+                    style={{ width: `${(currentBlock.current_week / currentBlock.total_weeks) * 100}%` }}
+                  />
+                </div>
+              </div>
+              <div className="block-details">
+                <div className="detail-item">
+                  <span className="detail-label">Estrategia:</span>
+                  <span className="detail-value">{currentBlock.strategy}</span>
+                </div>
+                <div className="detail-item">
+                  <span className="detail-label">Incremento:</span>
+                  <span className="detail-value">{currentBlock.weekly_increment}%/sem</span>
+                </div>
+              </div>
+              <div className="block-actions">
+                <Link to={`/blocks/${currentBlock.id}`} className="block-action-btn">
+                  Ver Detalles
+                </Link>
+                <Link to="/workout-logger/push" className="block-action-btn primary">
+                  Entrenar Ahora
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Quick Actions Section */}
         <div className="dashboard-section">
           <div className="section-header">
@@ -217,20 +380,24 @@ const DashboardPage: React.FC = () => {
             <WorkoutIcon />
           </div>
           <div className="section-content">
-            Start a new workout or view your training data
+            Start your next training session
           </div>
-          <div className="quick-actions">
-            <Link to="/workout-logger" className="action-btn">
+          <div className="action-buttons">
+            <Link to="/program-templates" className="action-btn program">
+              <ProgramIcon />
+              TRAINING PROGRAMS
+            </Link>
+            <Link to="/workout-logger/push" className="action-btn primary">
               <PlusIcon />
-              LOG WORKOUT
+              PUSH DAY
             </Link>
-            <Link to="/workout-history" className="action-btn">
-              <HistoryIcon />
-              HISTORY
+            <Link to="/workout-logger/pull" className="action-btn secondary">
+              <PlusIcon />
+              PULL DAY
             </Link>
-            <Link to="/progress" className="action-btn">
-              <ChartIcon />
-              PROGRESS
+            <Link to="/workout-logger/legs" className="action-btn tertiary">
+              <PlusIcon />
+              LEGS DAY
             </Link>
           </div>
         </div>
@@ -245,7 +412,7 @@ const DashboardPage: React.FC = () => {
             Your latest training sessions
           </div>
           {recentWorkouts.length > 0 ? (
-            <div className="recent-workouts">
+            <div className="workout-list">
               {recentWorkouts.map((workout) => (
                 <div key={workout.id} className="workout-item">
                   <div className="workout-info">
@@ -255,11 +422,11 @@ const DashboardPage: React.FC = () => {
                   <div className="workout-stats">
                     <div className="workout-stat">
                       <WeightIcon />
-                      {formatWeight(workout.totalWeight)}
+                      <span>{formatWeight(workout.totalWeight)}</span>
                     </div>
                     <div className="workout-stat">
                       <TimeIcon />
-                      {formatDuration(workout.duration)}
+                      <span>{formatDuration(workout.duration)}</span>
                     </div>
                   </div>
                 </div>
@@ -268,44 +435,59 @@ const DashboardPage: React.FC = () => {
           ) : (
             <div className="empty-state">
               <EmptyIcon />
-              <h3 className="empty-title">NO WORKOUTS YET</h3>
-              <p className="empty-message">
-                Start your training journey by logging your first workout
-              </p>
-              <Link to="/workout-logger" className="action-btn">
-                <PlusIcon />
-                START TRAINING
+              <p>No workouts yet</p>
+              <Link to="/workout-logger/push" className="empty-action">
+                Start your first workout
               </Link>
             </div>
           )}
         </div>
 
-        {/* 1RM Progression Section */}
+        {/* One Rep Max Section */}
         <div className="dashboard-section">
           <div className="section-header">
-            <h2 className="section-title">1RM PROGRESSION</h2>
+            <h2 className="section-title">ONE REP MAX</h2>
             <RMIcon />
           </div>
           <div className="section-content">
-            Track your strength gains across main lifts
+            {latestOneRepMaxes && latestOneRepMaxes.length > 0 
+              ? "YOUR CURRENT STRENGTH LEVELS" 
+              : userProfile && userProfile.maxReps
+              ? "YOUR INITIAL STRENGTH LEVELS (FROM SETUP)"
+              : "EXAMPLE DATA - SET YOUR REAL VALUES IN SETUP"
+            }
           </div>
           <div className="rm-cards">
-            {rmData.map((rm) => (
-              <div key={rm.exercise} className="rm-card">
+            {calculatedRmData.map((rm) => (
+              <div key={rm.exercise} className={`rm-card ${(!latestOneRepMaxes || latestOneRepMaxes.length === 0) && (!userProfile || !userProfile.maxReps) ? 'rm-card--example' : ''}`}>
                 <h3>{rm.exercise}</h3>
                 <div className="rm-values">
                   <div className="rm-value">
-                    <span>INITIAL</span>
-                    <span className="initial-value">{rm.initial}kg</span>
+                    <span>CURRENT</span>
+                    <span className="hypothetical-value">{rm.hypothetical}KG</span>
                   </div>
                   <div className="rm-value">
-                    <span>HYPOTHETICAL</span>
-                    <span className="hypothetical-value">{rm.hypothetical}kg</span>
+                    <span>INITIAL</span>
+                    <span className="initial-value">{rm.initial}KG</span>
                   </div>
                 </div>
               </div>
             ))}
           </div>
+          {(!latestOneRepMaxes || latestOneRepMaxes.length === 0) && (!userProfile || !userProfile.maxReps) && (
+            <div className="rm-empty-state">
+              <div className="empty-message">
+                <span className="terminal-prompt">$</span> NO REAL DATA FOUND
+              </div>
+              <div className="empty-description">
+                COMPLETE INITIAL SETUP TO ADD YOUR ACTUAL ONE REP MAXES
+              </div>
+              <Link to="/setup" className="setup-link">
+                <PlusIcon />
+                GO TO SETUP
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Routines Section */}
@@ -315,45 +497,39 @@ const DashboardPage: React.FC = () => {
             <RoutinesIcon />
           </div>
           <div className="section-content">
-            Your active routines
+            Manage your training programs
           </div>
-          {isLoadingRoutines ? (
-            <div className="loading-state">
-              <div className="loading-spinner"></div>
-              <p>Loading routines...</p>
-            </div>
-          ) : activeRoutines.length > 0 ? (
-            <div className="routines-list">
-              {activeRoutines.slice(0, 3).map((routine) => (
-                <Link key={routine.id} to={`/routines/${routine.id}`} className="routine-item">
-                  <div className="routine-info">
-                    <div className="routine-name">{routine.name}</div>
-                    <div className="routine-stats">
-                      {routine.exercises?.length || 0} exercises • {routine.days?.length || 0} days
-                    </div>
-                  </div>
-                  <div className="routine-arrow">→</div>
-                </Link>
-              ))}
-              {activeRoutines.length > 3 && (
-                <Link to="/routines" className="view-all-link">
-                  View all {activeRoutines.length} routines →
-                </Link>
-              )}
-            </div>
-          ) : (
-            <div className="empty-state">
-              <EmptyIcon />
-              <h3 className="empty-title">NO ACTIVE ROUTINES</h3>
-              <p className="empty-message">
-                Create a routine to structure your training program
-              </p>
-              <Link to="/routines" className="action-btn">
-                <PlusIcon />
-                CREATE ROUTINE
-              </Link>
-            </div>
-          )}
+          <div className="routine-actions">
+            <Link to="/routines" className="routine-btn">
+              <CalendarIcon />
+              VIEW ROUTINES
+            </Link>
+            <Link to="/blocks" className="routine-btn">
+              <ChartIcon />
+              TRAINING BLOCKS
+            </Link>
+          </div>
+        </div>
+
+        {/* Progress Section */}
+        <div className="dashboard-section">
+          <div className="section-header">
+            <h2 className="section-title">PROGRESS</h2>
+            <ChartIcon />
+          </div>
+          <div className="section-content">
+            Track your long-term progress
+          </div>
+          <div className="progress-actions">
+            <Link to="/progress" className="progress-btn">
+              <ChartIcon />
+              VIEW PROGRESS
+            </Link>
+            <Link to="/history" className="progress-btn">
+              <HistoryIcon />
+              WORKOUT HISTORY
+            </Link>
+          </div>
         </div>
       </div>
     </div>

@@ -18,13 +18,13 @@ const ProgressPage: React.FC = () => {
       {/* Current OneRepMax Summary */}
       {!isLoadingOneRepMaxes && latestOneRepMaxes.length > 0 && (
         <div className="progress-section">
-          <div className="section-header">
-            <h2 className="section-title">RÉCORDS ACTUALES (1RM)</h2>
-            <div className="section-badge">
+          <div className="progress-section-header">
+            <h2 className="progress-section-title">RÉCORDS ACTUALES (1RM)</h2>
+            <div className="progress-section-badge">
               {latestOneRepMaxes.length} ejercicios
             </div>
           </div>
-          <div className="section-content">
+          <div className="progress-section-content">
             Tus mejores marcas personales en cada ejercicio
           </div>
           <div className="rm-cards">
@@ -51,11 +51,11 @@ const ProgressPage: React.FC = () => {
 
       {/* Main Progress Chart */}
       <div className="progress-section">
-        <div className="section-header">
-          <h2 className="section-title">PROGRESIÓN DE 1RM</h2>
-          <div className="section-badge">INTERACTIVO</div>
+        <div className="progress-section-header">
+          <h2 className="progress-section-title">PROGRESIÓN DE 1RM</h2>
+          <div className="progress-section-badge">INTERACTIVO</div>
         </div>
-        <div className="section-content">
+        <div className="progress-section-content">
           Visualiza tu progreso a lo largo del tiempo
         </div>
         <div className="chart-container">
@@ -65,11 +65,11 @@ const ProgressPage: React.FC = () => {
 
       {/* Statistics Dashboard */}
       <div className="progress-section">
-        <div className="section-header">
-          <h2 className="section-title">ESTADÍSTICAS AVANZADAS</h2>
-          <div className="section-badge">SISTEMA</div>
+        <div className="progress-section-header">
+          <h2 className="progress-section-title">ESTADÍSTICAS AVANZADAS</h2>
+          <div className="progress-section-badge">SISTEMA</div>
         </div>
-        <div className="section-content">
+        <div className="progress-section-content">
           Métricas detalladas de tu rendimiento
         </div>
         

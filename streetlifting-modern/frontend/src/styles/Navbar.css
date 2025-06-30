@@ -1,0 +1,364 @@
+/* Navbar Styles - Terminal Modern */
+@font-face {
+  font-family: 'Chopsic';
+  src: url('../assets/fonts/Chopsic 400.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Top Navbar - Logo and Logout */
+.navbar-top {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+  background: rgba(26, 26, 26, 0.95);
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* iPhone Dynamic Island Support - minimal padding */
+  padding-top: calc(0.5rem + env(safe-area-inset-top));
+  height: calc(50px + env(safe-area-inset-top));
+}
+
+/* Brand - Top Section */
+.nav-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.brand-link {
+  text-decoration: none;
+  color: var(--accent-primary);
+  font-weight: 400;
+  font-size: 1.75rem;
+  font-family: 'Chopsic', monospace;
+  letter-spacing: 2px;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.brand-link:hover {
+  color: #00cc6a;
+  transform: scale(1.05);
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+}
+
+.brand-text {
+  background: linear-gradient(45deg, var(--accent-primary), #00cc6a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 2px rgba(0, 255, 136, 0.3));
+}
+
+/* Actions */
+.nav-actions {
+  display: flex;
+  align-items: center;
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.375rem;
+  background: transparent;
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  min-width: 36px;
+  min-height: 36px;
+}
+
+.logout-btn:hover {
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+  transform: translateY(-1px);
+  border-color: #ff6b6b;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.2);
+}
+
+.logout-btn svg {
+  width: 18px;
+  height: 18px;
+  transition: all 0.2s ease;
+}
+
+.logout-btn:hover svg {
+  transform: scale(1.1);
+}
+
+/* Bottom Navigation - Icons only */
+.navbar-bottom {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+  background: rgba(26, 26, 26, 0.95);
+  padding: 0.75rem 1rem;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+  /* iPhone Dynamic Island Support */
+  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
+  height: calc(70px + env(safe-area-inset-bottom));
+}
+
+/* Navigation Menu - Bottom Section */
+.nav-menu {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  max-width: 600px;
+  margin: 0 auto;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-radius: 0.75rem;
+  transition: all 0.2s ease;
+  min-width: 50px;
+  min-height: 50px;
+  position: relative;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid transparent;
+  flex: 1;
+  max-width: 60px;
+}
+
+.nav-item:hover {
+  color: var(--text-primary);
+  background: rgba(0, 255, 136, 0.1);
+  transform: translateY(-2px);
+  border-color: rgba(0, 255, 136, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 255, 136, 0.2);
+}
+
+.nav-item.active {
+  color: var(--accent-primary);
+  background: rgba(0, 255, 136, 0.15);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+}
+
+.nav-icon {
+  width: 24px;
+  height: 24px;
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover .nav-icon {
+  transform: scale(1.1);
+}
+
+/* Active indicator */
+.nav-item.active::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 2px;
+  background: var(--accent-primary);
+  border-radius: 1px;
+  box-shadow: 0 0 8px var(--accent-primary);
+}
+
+/* Hover effects */
+.nav-item:hover::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+  border-radius: 0.75rem;
+  z-index: -1;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Add bottom padding to main content to account for bottom navbar */
+body {
+  padding-bottom: calc(90px + env(safe-area-inset-bottom));
+  padding-top: calc(60px + env(safe-area-inset-top));
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .navbar-top {
+    padding: 0.375rem 0.75rem;
+    padding-top: calc(0.375rem + env(safe-area-inset-top));
+    height: calc(45px + env(safe-area-inset-top));
+  }
+  
+  .brand-text {
+    font-size: 1.5rem;
+    letter-spacing: 1.5px;
+  }
+  
+  .navbar-bottom {
+    padding: 0.5rem 0.75rem;
+    padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+    height: calc(65px + env(safe-area-inset-bottom));
+  }
+  
+  .nav-menu {
+    gap: 0.375rem;
+  }
+  
+  .nav-item {
+    padding: 0.625rem;
+    min-width: 45px;
+    min-height: 45px;
+    max-width: 55px;
+  }
+  
+  .nav-icon {
+    width: 22px;
+    height: 22px;
+  }
+  
+  .logout-btn {
+    padding: 0.25rem;
+    min-width: 32px;
+    min-height: 32px;
+  }
+  
+  .logout-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  body {
+    padding-bottom: calc(85px + env(safe-area-inset-bottom));
+    padding-top: calc(55px + env(safe-area-inset-top));
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-top {
+    padding: 0.25rem 0.5rem;
+    padding-top: calc(0.25rem + env(safe-area-inset-top));
+    height: calc(40px + env(safe-area-inset-top));
+  }
+  
+  .brand-text {
+    font-size: 3rem;
+    letter-spacing: 1px;
+  }
+  
+  .navbar-bottom {
+    padding: 0.5rem 0.5rem;
+    padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+    height: calc(60px + env(safe-area-inset-bottom));
+  }
+  
+  .nav-menu {
+    gap: 0.25rem;
+  }
+  
+  .nav-item {
+    padding: 0.5rem;
+    min-width: 40px;
+    min-height: 40px;
+    max-width: 50px;
+  }
+  
+  .nav-icon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .logout-btn {
+    padding: 0.25rem;
+    min-width: 28px;
+    min-height: 28px;
+  }
+  
+  .logout-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  body {
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
+    padding-top: calc(50px + env(safe-area-inset-top));
+  }
+}
+
+/* iPhone Specific Optimizations */
+@supports (padding: max(0px)) {
+  .navbar-top {
+    padding-top: max(0.25rem, env(safe-area-inset-top) + 0.125rem);
+  }
+  
+  .navbar-bottom {
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom) + 0.25rem);
+  }
+  
+  body {
+    padding-top: max(50px, env(safe-area-inset-top) + 40px);
+    padding-bottom: max(80px, env(safe-area-inset-bottom) + 60px);
+  }
+}
+
+/* Landscape orientation adjustments */
+@media (max-width: 768px) and (orientation: landscape) {
+  .navbar-top {
+    padding: 0.25rem 0.5rem;
+    padding-top: calc(0.25rem + env(safe-area-inset-top));
+    height: calc(35px + env(safe-area-inset-top));
+  }
+  
+  .navbar-bottom {
+    padding: 0.375rem 0.5rem;
+    padding-bottom: calc(0.375rem + env(safe-area-inset-bottom));
+    height: calc(55px + env(safe-area-inset-bottom));
+  }
+  
+  .nav-item {
+    padding: 0.5rem;
+    min-width: 35px;
+    min-height: 35px;
+  }
+  
+  .nav-icon {
+    width: 18px;
+    height: 18px;
+  }
+  
+  body {
+    padding-bottom: calc(75px + env(safe-area-inset-bottom));
+    padding-top: calc(45px + env(safe-area-inset-top));
+  }
+} 

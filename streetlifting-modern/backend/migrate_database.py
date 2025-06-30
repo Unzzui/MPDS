@@ -98,7 +98,36 @@ def migrate_database():
         routine_columns = [column[1] for column in cursor.fetchall()]
         print(f"Routines table columns: {routine_columns}")
         
-        conn.close()
+        # Check if block_stages table exists
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='block_stages'")
+        if not cursor.fetchone():
+            print("❌ block_stages table not found. Please run the app first to create all tables.")
+            return
+        
+        # Check if volume_multiplier column exists
+        cursor.execute("PRAGMA table_info(block_stages)")
+        columns = [column[1] for column in cursor.fetchall()]
+        
+        if 'volume_multiplier' not in columns:
+            print("➕ Adding volume_multiplier column to block_stages...")
+            cursor.execute("ALTER TABLE block_stages ADD COLUMN volume_multiplier FLOAT DEFAULT 1.0")
+            print("✅ volume_multiplier column added")
+        
+        if 'intensity_focus' not in columns:
+            print("➕ Adding intensity_focus column to block_stages...")
+            cursor.execute("ALTER TABLE block_stages ADD COLUMN intensity_focus VARCHAR(50)")
+            print("✅ intensity_focus column added")
+        
+        # Check if training_maxes column exists in training_blocks
+        cursor.execute("PRAGMA table_info(training_blocks)")
+        columns = [column[1] for column in cursor.fetchall()]
+        
+        if 'training_maxes' not in columns:
+            print("➕ Adding training_maxes column to training_blocks...")
+            cursor.execute("ALTER TABLE training_blocks ADD COLUMN training_maxes JSON")
+            print("✅ training_maxes column added")
+        
+        conn.commit()
         print("✅ Database migration completed successfully!")
         
     except Exception as e:

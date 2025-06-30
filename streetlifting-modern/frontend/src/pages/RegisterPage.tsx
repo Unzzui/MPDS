@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import '../styles/Register.css';
 
 const RegisterPage: React.FC = () => {
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
     email: '',
     password: '',
     confirmPassword: ''
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
+  const { register } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -22,8 +23,12 @@ const RegisterPage: React.FC = () => {
   };
 
   const validateForm = () => {
-    if (!formData.name.trim()) {
-      setError('El nombre es requerido');
+    if (!formData.username.trim()) {
+      setError('El nombre de usuario es requerido');
+      return false;
+    }
+    if (formData.username.length < 3) {
+      setError('El nombre de usuario debe tener al menos 3 caracteres');
       return false;
     }
     if (!formData.email.trim()) {
@@ -56,16 +61,15 @@ const RegisterPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // Here you would call your API to register the user
-      console.log('Registering user:', formData);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Navigate to login page after successful registration
-      navigate('/login');
-    } catch (err) {
-      setError('Error al registrar el usuario. Por favor, intenta de nuevo.');
+      await register({
+        username: formData.username,
+        email: formData.email,
+        password: formData.password
+      });
+      // Navigation will be handled by AuthContext
+    } catch (err: any) {
+      console.error('Registration error:', err);
+      setError(err.message || 'Error al registrar usuario. Intenta de nuevo.');
     } finally {
       setIsLoading(false);
     }
@@ -74,100 +78,134 @@ const RegisterPage: React.FC = () => {
   return (
     <div className="register-page">
       <div className="register-container">
-        <div className="register-header">
-          <h1>MPDS</h1>
-          <h2>Crear Cuenta</h2>
-          <p>Únete a la comunidad de Streetlifting</p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="register-form">
-          {error && <div className="error-message">{error}</div>}
-          
-          <div className="form-group">
-            <label htmlFor="name" className="form-label">
-              Nombre Completo
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="form-input"
-              placeholder="Tu nombre completo"
-              required
-            />
+        <div className="register-card">
+          <div className="register-header">
+            <div className="register-logo">
+              <h1 className="register-title">MPDS</h1>
+              <h2 className="register-subtitle">STREETLIFTING SYSTEM</h2>
+            </div>
+            <h3 className="register-form-title">CREAR NUEVA CUENTA</h3>
+            <p className="register-description">
+              UNETE A LA COMUNIDAD Y COMIENZA A TRACKEAR TU PROGRESO
+            </p>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="email" className="form-label">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="form-input"
-              placeholder="tu@email.com"
-              required
-            />
+          <form onSubmit={handleSubmit} className="register-form">
+            {error && (
+              <div className="error-message">
+                <span className="error-icon">[ERROR]</span> {error}
+              </div>
+            )}
+            
+            <div className="form-group">
+              <label htmlFor="username" className="form-label">
+                NOMBRE DE USUARIO
+              </label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="Elige un nombre de usuario"
+                required
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="email" className="form-label">
+                EMAIL
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="tu@email.com"
+                required
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="password" className="form-label">
+                CONTRASEÑA
+              </label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="Minimo 6 caracteres"
+                required
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="confirmPassword" className="form-label">
+                CONFIRMAR CONTRASEÑA
+              </label>
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="Repite tu contraseña"
+                required
+                disabled={isLoading}
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="register-button"
+              disabled={isLoading || !formData.username || !formData.email || !formData.password || !formData.confirmPassword}
+            >
+              {isLoading ? (
+                <>
+                  <span className="loading-spinner"></span>
+                  CREANDO CUENTA...
+                </>
+              ) : (
+                'CREAR CUENTA'
+              )}
+            </button>
+          </form>
+
+          <div className="register-footer">
+            <div className="login-link">
+              <p>
+                ¿YA TIENES CUENTA?{' '}
+                <Link to="/login" className="register-link">
+                  INICIA SESION AQUI
+                </Link>
+              </p>
+            </div>
+            
+            <div className="register-benefits">
+              <h4 className="benefits-title">¿POR QUE REGISTRARSE?</h4>
+              <ul className="benefits-list">
+                <li>TRACKEA TUS ENTRENAMIENTOS</li>
+                <li>VISUALIZA TU PROGRESO</li>
+                <li>ESTABLECE Y ALCANZA TUS METAS</li>
+                <li>PROYECCIONES DE 1RM AUTOMATICAS</li>
+                <li>DASHBOARD QUE SE ADAPTA A TU NIVEL</li>
+              </ul>
+            </div>
           </div>
-
-          <div className="form-group">
-            <label htmlFor="password" className="form-label">
-              Contraseña
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="form-input"
-              placeholder="••••••••"
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="confirmPassword" className="form-label">
-              Confirmar Contraseña
-            </label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className="form-input"
-              placeholder="••••••••"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="register-button"
-            disabled={isLoading}
-          >
-            {isLoading && <span className="loading-spinner"></span>}
-            {isLoading ? 'Creando cuenta...' : 'Crear Cuenta'}
-          </button>
-        </form>
-
-        <div className="register-footer">
-          <p>
-            ¿Ya tienes una cuenta?{' '}
-            <Link to="/login" className="login-link">
-              Inicia sesión aquí
-            </Link>
-          </p>
         </div>
       </div>
     </div>
   );
 };
 
-export default RegisterPage; 
+export default RegisterPage;

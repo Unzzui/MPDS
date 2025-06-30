@@ -2,24 +2,37 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useWorkouts } from '../hooks/useWorkouts';
 import type { WorkoutSummary } from '../types';
+import '../styles/History.css';
 
-// Simple SVG Icons
+// Terminal-style SVG Icons
 const CalendarIcon = () => (
-  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg className="meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
   </svg>
 );
 
 const EyeIcon = () => (
-  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg className="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
   </svg>
 );
 
 const TrashIcon = () => (
-  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg className="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+  </svg>
+);
+
+const EmptyIcon = () => (
+  <svg className="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+  </svg>
+);
+
+const PlusIcon = () => (
+  <svg className="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
   </svg>
 );
 
@@ -108,58 +121,58 @@ const WorkoutHistoryPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="history-page">
       {/* Header */}
-      <div className="bg-gray-800 rounded-lg p-6">
-        <h1 className="text-2xl font-bold text-white mb-2">Workout History</h1>
-        <p className="text-gray-400">
+      <div className="history-header">
+        <h1 className="history-title">WORKOUT HISTORY</h1>
+        <p className="history-subtitle">
           Track your progress and review past workouts
         </p>
       </div>
 
       {/* Filters */}
-      <div className="bg-gray-800 rounded-lg p-4">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-white">Filters</h2>
+      <div className="filters-section">
+        <div className="filters-header">
+          <h2 className="filters-title">FILTERS</h2>
           <button
             onClick={clearFilters}
-            className="text-blue-500 hover:text-blue-400 text-sm font-medium transition-colors"
+            className="clear-filters-btn"
           >
-            Clear filters
+            CLEAR FILTERS
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="filters-grid">
           {/* Month Filter */}
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Month
+          <div className="filter-group">
+            <label className="filter-label">
+              MONTH
             </label>
             <select
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
+              className="filter-select"
             >
-              <option value="">All months</option>
+              <option value="">ALL MONTHS</option>
               {months.map((month) => (
                 <option key={month.value} value={month.value}>
-                  {month.label}
+                  {month.label.toUpperCase()}
                 </option>
               ))}
             </select>
           </div>
 
           {/* Year Filter */}
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Year
+          <div className="filter-group">
+            <label className="filter-label">
+              YEAR
             </label>
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
+              className="filter-select"
             >
-              <option value="">All years</option>
+              <option value="">ALL YEARS</option>
               {years.map((year) => (
                 <option key={year.value} value={year.value}>
                   {year.label}
@@ -169,92 +182,84 @@ const WorkoutHistoryPage: React.FC = () => {
           </div>
 
           {/* Results Count */}
-          <div className="flex items-end">
-            <div className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md">
-              <p className="text-sm text-gray-400">
-                {filteredWorkouts.length} workout{filteredWorkouts.length !== 1 ? 's' : ''} found
-              </p>
+          <div className="filter-group">
+            <label className="filter-label">
+              RESULTS
+            </label>
+            <div className="results-count">
+              {filteredWorkouts.length} WORKOUT{filteredWorkouts.length !== 1 ? 'S' : ''} FOUND
             </div>
           </div>
         </div>
       </div>
 
       {/* Workouts List */}
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="workouts-section">
         {isLoading ? (
-          <div className="space-y-4">
+          <div>
             {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="animate-pulse">
-                <div className="h-20 bg-gray-700 rounded-lg"></div>
+              <div key={i} className="loading-skeleton">
+                <div style={{ height: '60px' }}></div>
               </div>
             ))}
           </div>
         ) : filteredWorkouts.length > 0 ? (
-          <div className="space-y-4">
+          <div>
             {filteredWorkouts.map((workout: WorkoutSummary) => (
-              <div
-                key={workout.id}
-                className="bg-gray-700 hover:bg-gray-600 rounded-lg p-4 transition-colors"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <div className={`w-3 h-3 rounded-full ${getDayTypeColor(workout.day_type)}`}></div>
-                    <div>
-                      <h3 className="font-medium text-white">
-                        {workout.day_type} Day
-                      </h3>
-                      <div className="flex items-center space-x-4 text-sm text-gray-400">
-                        <span className="flex items-center">
+              <div key={workout.id} className="workout-item">
+                <div className="workout-content">
+                  <div className="workout-info">
+                    <div className={`day-type-indicator ${workout.day_type.toLowerCase()}`}></div>
+                    <div className="workout-details">
+                      <h3>{workout.day_type.toUpperCase()} DAY</h3>
+                      <div className="workout-meta">
+                        <span className="meta-item">
                           <CalendarIcon />
-                          <span className="ml-1">{formatDate(workout.date)}</span>
+                          {formatDate(workout.date)}
                         </span>
-                        <span>{workout.exercise_count} exercises</span>
-                        <span>{workout.total_sets} sets</span>
+                        <span className="meta-item">
+                          {workout.exercise_count} EXERCISES
+                        </span>
+                        <span className="meta-item">
+                          {workout.total_sets} SETS
+                        </span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex items-center space-x-2">
-                    <span className="text-2xl">{getDayTypeIcon(workout.day_type)}</span>
-                    
+                  <div className="workout-actions">
                     {/* Status indicator */}
-                    <div className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      workout.completed 
-                        ? 'bg-green-900 text-green-300' 
-                        : 'bg-yellow-900 text-yellow-300'
-                    }`}>
-                      {workout.completed ? 'Completed' : 'In Progress'}
+                    <div className={`status-badge ${workout.completed ? 'completed' : 'in-progress'}`}>
+                      {workout.completed ? 'COMPLETED' : 'IN PROGRESS'}
                     </div>
 
                     {/* Actions */}
-                    <div className="flex items-center space-x-2">
-                      <Link
-                        to={`/workout/${workout.id}`}
-                        className="p-2 text-gray-400 hover:text-white transition-colors"
-                        title="View workout"
-                      >
-                        <EyeIcon />
-                      </Link>
-                      
-                      <button
-                        onClick={() => handleDelete(workout.id)}
-                        disabled={deleteWorkoutLoading}
-                        className="p-2 text-gray-400 hover:text-red-400 transition-colors disabled:opacity-50"
-                        title="Delete workout"
-                      >
-                        <TrashIcon />
-                      </button>
-                    </div>
+                    <Link
+                      to={`/workout/${workout.id}`}
+                      className="action-btn"
+                      title="View workout"
+                    >
+                      <EyeIcon />
+                    </Link>
+                    
+                    <button
+                      onClick={() => handleDelete(workout.id)}
+                      disabled={deleteWorkoutLoading}
+                      className="action-btn delete"
+                      title="Delete workout"
+                    >
+                      <TrashIcon />
+                    </button>
                   </div>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
-            <div className="text-6xl mb-4">📊</div>
-            <h3 className="text-xl font-semibold text-white mb-2">No workouts found</h3>
-            <p className="text-gray-400 mb-6">
+          <div className="empty-state">
+            <EmptyIcon />
+            <h3 className="empty-title">NO WORKOUTS FOUND</h3>
+            <p className="empty-message">
               {selectedMonth || selectedYear 
                 ? 'Try adjusting your filters or log your first workout.'
                 : 'Start your fitness journey by logging your first workout!'
@@ -262,9 +267,10 @@ const WorkoutHistoryPage: React.FC = () => {
             </p>
             <Link
               to="/workout-logger/Push"
-              className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
+              className="start-workout-btn"
             >
-              Log Workout
+              <PlusIcon />
+              LOG WORKOUT
             </Link>
           </div>
         )}

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import type { AxiosInstance, AxiosResponse } from 'axios';
+import { environment, updateApiBaseUrl } from '../config/environment';
 import type { 
   User, UserCreate, UserLogin, AuthResponse,
   Workout, WorkoutCreate, WorkoutUpdate, WorkoutSummary, WorkoutProgress,
@@ -10,14 +11,18 @@ import type {
   Routine, RoutineCreate, RoutineUpdate, RoutineSummary, RoutineTemplate, RoutineExercise, RoutineExerciseCreate
 } from '../types';
 
-// API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+// API Configuration - usar configuración dinámica
+const API_BASE_URL = environment.apiBaseUrl;
 
 class ApiService {
   private api: AxiosInstance;
 
   constructor() {
     console.log('Initializing ApiService with baseURL:', `${API_BASE_URL}/api/v1`);
+    console.log('Environment:', { 
+      isDevelopment: environment.isDevelopment, 
+      apiBaseUrl: environment.apiBaseUrl 
+    });
     
     this.api = axios.create({
       baseURL: `${API_BASE_URL}/api/v1`,
@@ -54,6 +59,13 @@ class ApiService {
       }
     );
   }
+
+  // Método para actualizar la URL de la API dinámicamente
+  updateBaseUrl = (newUrl: string) => {
+    updateApiBaseUrl(newUrl);
+    this.api.defaults.baseURL = `${newUrl}/api/v1`;
+    console.log('API base URL updated to:', newUrl);
+  };
 
   // Auth endpoints
   login = async (credentials: UserLogin): Promise<AuthResponse> => {
@@ -147,8 +159,8 @@ class ApiService {
     return response.data;
   }
 
-  async getTrainingBlock(id: number): Promise<TrainingBlock> {
-    const response: AxiosResponse<TrainingBlock> = await this.api.get(`/training-blocks/${id}`);
+  async getTrainingBlock(id: number | string): Promise<TrainingBlock> {
+    const response: AxiosResponse<TrainingBlock> = await this.api.get(`/blocks/${id}/`);
     return response.data;
   }
 
@@ -193,6 +205,11 @@ class ApiService {
 
   deleteBlock = async (id: string): Promise<void> => {
     await this.api.delete(`/blocks/${id}/`);
+  }
+
+  activateBlock = async (id: string): Promise<TrainingBlock> => {
+    const response: AxiosResponse<TrainingBlock> = await this.api.post(`/blocks/${id}/activate`);
+    return response.data;
   }
 
   getBlockProgress = async (id: string): Promise<any> => {
@@ -341,6 +358,52 @@ class ApiService {
 
   async addRoutineExercise(routineId: number, exercise: RoutineExerciseCreate): Promise<RoutineExercise> {
     const response: AxiosResponse<RoutineExercise> = await this.api.post(`/routines/${routineId}/exercises`, exercise);
+    return response.data;
+  }
+
+  // Adaptation endpoints
+  async getUserProfile(): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.get('/adaptation/profile');
+    return response.data;
+  }
+
+  async getAdaptiveDashboard(): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.get('/adaptation/dashboard');
+    return response.data;
+  }
+
+  async trackInteraction(interaction: any): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.post('/adaptation/interactions', interaction);
+    return response.data;
+  }
+
+  async setManualLevel(level: string, reason?: string): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.post('/adaptation/level/manual-override', { level, reason });
+    return response.data;
+  }
+
+  async removeManualOverride(): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.delete('/adaptation/level/manual-override');
+    return response.data;
+  }
+
+  async updateAdaptationProfile(updates: any): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.put('/adaptation/profile', updates);
+    return response.data;
+  }
+
+  async forceRecalculation(): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.post('/adaptation/recalculate-level');
+    return response.data;
+  }
+
+  async getFeatureSuggestions(): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.get('/adaptation/feature-discovery');
+    return response.data;
+  }
+
+  async submitFeedback(feedback: any): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.post('/adaptation/feedback', feedback);
     return response.data;
   }
 }

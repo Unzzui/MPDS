@@ -1,156 +1,266 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useOneRepMaxes } from '../hooks/useOneRepMaxes';
+import { useQueryClient } from '@tanstack/react-query';
 import '../styles/Setup.css';
 
-const SetupPage: React.FC = () => {
-  const { user } = useAuth();
-  const [formData, setFormData] = useState({
-    name: user?.name || '',
-    age: '',
-    weight: '',
-    height: '',
-    pull_up_rm: '',
-    dip_rm: '',
-    squat_rm: '',
-    muscle_up_rm: ''
-  });
+interface InitialRMData {
+  muscleUp: number;
+  pullUp: number;
+  dips: number;
+  squat: number;
+}
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+const SetupPage: React.FC = () => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
+  const { latestOneRepMaxes, createOneRepMax, isCreatingOneRepMax } = useOneRepMaxes();
+  
+  const [formData, setFormData] = useState<InitialRMData>({
+    muscleUp: 0,
+    pullUp: 0,
+    dips: 0,
+    squat: 0
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Check if user has existing 1RM data
+  const hasExistingData = latestOneRepMaxes && latestOneRepMaxes.length > 0;
+
+  const handleInputChange = (field: keyof InitialRMData, value: string) => {
+    const numValue = value === '' ? 0 : parseFloat(value);
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [field]: numValue
     }));
+    
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
+    }
+  };
+
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {};
+    
+    if (formData.muscleUp < 0) {
+      newErrors.muscleUp = 'El valor debe ser mayor o igual a 0';
+    }
+    if (formData.pullUp < 0) {
+      newErrors.pullUp = 'El valor debe ser mayor o igual a 0';
+    }
+    if (formData.dips < 0) {
+      newErrors.dips = 'El valor debe ser mayor o igual a 0';
+    }
+    if (formData.squat < 0) {
+      newErrors.squat = 'El valor debe ser mayor o igual a 0';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement API call to update user data
-    console.log('Updating user data:', formData);
+    
+    if (!validateForm()) {
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      
+      // Create 1RM records for each exercise
+      const exercises = [
+        { name: 'Muscle Up', value: formData.muscleUp },
+        { name: 'Pull Up', value: formData.pullUp },
+        { name: 'Dips', value: formData.dips },
+        { name: 'Squat', value: formData.squat }
+      ];
+      
+      // Create all 1RM records
+      for (const exercise of exercises) {
+        if (exercise.value > 0) {
+          await createOneRepMax({
+            exercise: exercise.name,
+            one_rm: exercise.value,
+            date_achieved: today
+          });
+        }
+      }
+      
+      // Mark setup as completed in localStorage
+      localStorage.setItem('setup_verified', 'true');
+      
+      // Invalidate the 1RM query to trigger the redirect logic
+      queryClient.invalidateQueries({ queryKey: ['one-rep-maxes'] });
+      
+      // Navigate to dashboard after successful setup
+      navigate('/dashboard');
+      
+    } catch (error) {
+      console.error('Error setting up initial 1RM:', error);
+      // You could show an error message here
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleSkip = () => {
+    // Mark setup as completed even when skipping
+    localStorage.setItem('setup_verified', 'true');
+    navigate('/dashboard');
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-orange-500 mb-2">Configuración del Usuario</h1>
-        <p className="text-xl text-gray-300">Configura tus datos personales y 1RM iniciales</p>
-      </div>
+    <div className="setup-page">
+      <div className="setup-container">
+        <div className="setup-header">
+          <h1 className="setup-title">CONFIGURACION INICIAL</h1>
+          <p className="setup-subtitle">
+            {hasExistingData ? 'ACTUALIZAR DATOS DE ENTRENAMIENTO' : 'BIENVENIDO AL SISTEMA'}
+            <br />
+            {user?.username ? `USUARIO: ${user.username.toUpperCase()}` : 'ATLETA'}
+          </p>
+        </div>
 
-      <div className="bg-gray-800 rounded-lg p-6">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Personal Information */}
-          <div>
-            <h2 className="text-2xl font-bold text-orange-500 mb-4">Información Personal</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-gray-300 mb-2">Nombre</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="w-full bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none"
-                  required
-                />
+        <form onSubmit={handleSubmit} className="setup-form">
+          <div className="form-section">
+            <h2 className="section-title">
+              {hasExistingData ? 'ACTUALIZAR 1RM' : 'CONFIGURAR 1RM INICIALES'}
+            </h2>
+            <p className="section-description">
+              {hasExistingData 
+                ? 'Actualiza tus mejores marcas personales para optimizar las sugerencias de entrenamiento'
+                : 'Establece tus mejores marcas personales en cada ejercicio para comenzar a trackear tu progreso'
+              }
+            </p>
+            
+            <div className="rm-inputs">
+              <div className="rm-input-group">
+                <label htmlFor="muscleUp" className="rm-label">
+                  <span className="exercise-name">MUSCLE-UP</span>
+                  <span className="exercise-description">Dominadas con transicion</span>
+                </label>
+                <div className="input-wrapper">
+                  <input
+                    type="number"
+                    id="muscleUp"
+                    value={formData.muscleUp || ''}
+                    onChange={(e) => handleInputChange('muscleUp', e.target.value)}
+                    className={`rm-input ${errors.muscleUp ? 'error' : ''}`}
+                    placeholder="0"
+                    min="0"
+                    step="0.5"
+                  />
+                  <span className="unit">KG</span>
+                </div>
+                {errors.muscleUp && <span className="error-message">{errors.muscleUp}</span>}
               </div>
-              <div>
-                <label className="block text-gray-300 mb-2">Edad</label>
-                <input
-                  type="number"
-                  name="age"
-                  value={formData.age}
-                  onChange={handleInputChange}
-                  className="w-full bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none"
-                  required
-                />
+
+              <div className="rm-input-group">
+                <label htmlFor="pullUp" className="rm-label">
+                  <span className="exercise-name">PULL-UP</span>
+                  <span className="exercise-description">Dominadas con peso adicional</span>
+                </label>
+                <div className="input-wrapper">
+                  <input
+                    type="number"
+                    id="pullUp"
+                    value={formData.pullUp || ''}
+                    onChange={(e) => handleInputChange('pullUp', e.target.value)}
+                    className={`rm-input ${errors.pullUp ? 'error' : ''}`}
+                    placeholder="0"
+                    min="0"
+                    step="0.5"
+                  />
+                  <span className="unit">KG</span>
+                </div>
+                {errors.pullUp && <span className="error-message">{errors.pullUp}</span>}
               </div>
-              <div>
-                <label className="block text-gray-300 mb-2">Peso (kg)</label>
-                <input
-                  type="number"
-                  name="weight"
-                  value={formData.weight}
-                  onChange={handleInputChange}
-                  className="w-full bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none"
-                  required
-                />
+
+              <div className="rm-input-group">
+                <label htmlFor="dips" className="rm-label">
+                  <span className="exercise-name">DIPS</span>
+                  <span className="exercise-description">Fondos con peso adicional</span>
+                </label>
+                <div className="input-wrapper">
+                  <input
+                    type="number"
+                    id="dips"
+                    value={formData.dips || ''}
+                    onChange={(e) => handleInputChange('dips', e.target.value)}
+                    className={`rm-input ${errors.dips ? 'error' : ''}`}
+                    placeholder="0"
+                    min="0"
+                    step="0.5"
+                  />
+                  <span className="unit">KG</span>
+                </div>
+                {errors.dips && <span className="error-message">{errors.dips}</span>}
               </div>
-              <div>
-                <label className="block text-gray-300 mb-2">Altura (cm)</label>
-                <input
-                  type="number"
-                  name="height"
-                  value={formData.height}
-                  onChange={handleInputChange}
-                  className="w-full bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none"
-                  required
-                />
+
+              <div className="rm-input-group">
+                <label htmlFor="squat" className="rm-label">
+                  <span className="exercise-name">SQUAT</span>
+                  <span className="exercise-description">Sentadillas con barra</span>
+                </label>
+                <div className="input-wrapper">
+                  <input
+                    type="number"
+                    id="squat"
+                    value={formData.squat || ''}
+                    onChange={(e) => handleInputChange('squat', e.target.value)}
+                    className={`rm-input ${errors.squat ? 'error' : ''}`}
+                    placeholder="0"
+                    min="0"
+                    step="0.5"
+                  />
+                  <span className="unit">KG</span>
+                </div>
+                {errors.squat && <span className="error-message">{errors.squat}</span>}
               </div>
             </div>
           </div>
 
-          {/* 1RM Initial Values */}
-          <div>
-            <h2 className="text-2xl font-bold text-orange-500 mb-4">1RM Iniciales (kg)</h2>
-            <p className="text-gray-300 mb-4">Establece tus valores de 1RM iniciales para cada ejercicio</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-gray-300 mb-2">Pull-Up</label>
-                <input
-                  type="number"
-                  name="pull_up_rm"
-                  value={formData.pull_up_rm}
-                  onChange={handleInputChange}
-                  className="w-full bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none"
-                  placeholder="0"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-300 mb-2">Weighted Dips</label>
-                <input
-                  type="number"
-                  name="dip_rm"
-                  value={formData.dip_rm}
-                  onChange={handleInputChange}
-                  className="w-full bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none"
-                  placeholder="0"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-300 mb-2">Squat</label>
-                <input
-                  type="number"
-                  name="squat_rm"
-                  value={formData.squat_rm}
-                  onChange={handleInputChange}
-                  className="w-full bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none"
-                  placeholder="0"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-300 mb-2">Muscle-ups</label>
-                <input
-                  type="number"
-                  name="muscle_up_rm"
-                  value={formData.muscle_up_rm}
-                  onChange={handleInputChange}
-                  className="w-full bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none"
-                  placeholder="0"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Submit Button */}
-          <div className="text-center">
+          <div className="setup-actions">
             <button
               type="submit"
-              className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-lg transition-colors"
+              className="setup-btn primary"
+              disabled={isSubmitting || isCreatingOneRepMax}
             >
-              Guardar Configuración
+              {isSubmitting || isCreatingOneRepMax ? 'PROCESANDO...' : (hasExistingData ? 'ACTUALIZAR DATOS' : 'INICIAR ENTRENAMIENTO')}
+            </button>
+            
+            <button
+              type="button"
+              onClick={handleSkip}
+              className="setup-btn secondary"
+              disabled={isSubmitting || isCreatingOneRepMax}
+            >
+              {hasExistingData ? 'MANTENER DATOS ACTUALES' : 'CONFIGURAR DESPUES'}
             </button>
           </div>
         </form>
+
+        <div className="setup-info">
+          <h3>INFORMACION DEL SISTEMA</h3>
+          <ul>
+            <li>Si no conoces tu 1RM exacto, puedes estimarlo basandote en tu experiencia</li>
+            <li>Puedes actualizar estos numeros en cualquier momento desde tu perfil</li>
+            <li>Estos datos te ayudaran a calcular pesos sugeridos para tus entrenamientos</li>
+            <li>El sistema utiliza la formula de Epley para estimar 1RM a partir de series con mas repeticiones</li>
+          </ul>
+        </div>
       </div>
     </div>
   );

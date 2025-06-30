@@ -1,54 +1,97 @@
 import React from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useWorkout } from '../hooks/useWorkouts';
+import '../styles/WorkoutDetail.css';
 
-// Simple SVG Icons
+// Terminal-style SVG Icons
 const ArrowLeftIcon = () => (
-  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+  <svg className="terminal-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
   </svg>
 );
 
 const CalendarIcon = () => (
-  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+  <svg className="terminal-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
   </svg>
 );
 
 const ClockIcon = () => (
-  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+  <svg className="terminal-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
   </svg>
 );
 
 const CheckIcon = () => (
-  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+  <svg className="terminal-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
   </svg>
 );
 
 const XMarkIcon = () => (
-  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+  <svg className="terminal-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
   </svg>
 );
 
 const PencilIcon = () => (
-  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+  <svg className="terminal-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
   </svg>
 );
 
 const TrashIcon = () => (
-  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+  <svg className="terminal-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
   </svg>
 );
 
-// Simple date formatting function
+const WeightIcon = () => (
+  <svg className="terminal-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+  </svg>
+);
+
+const RepsIcon = () => (
+  <svg className="terminal-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+  </svg>
+);
+
+const SetIcon = () => (
+  <svg className="terminal-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+  </svg>
+);
+
+const RpeIcon = () => (
+  <svg className="terminal-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+  </svg>
+);
+
+const ExerciseIcon = () => (
+  <svg className="terminal-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+  </svg>
+);
+
+const NotesIcon = () => (
+  <svg className="terminal-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+  </svg>
+);
+
+const ErrorIcon = () => (
+  <svg className="terminal-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+  </svg>
+);
+
+// Date formatting function
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
   const month = months[date.getMonth()];
   const day = date.getDate().toString().padStart(2, '0');
   const year = date.getFullYear();
@@ -63,39 +106,41 @@ const WorkoutDetailPage: React.FC = () => {
   const getDayTypeColor = (dayType: string) => {
     switch (dayType?.toLowerCase()) {
       case 'push':
-        return 'bg-red-500';
+        return 'push';
       case 'pull':
-        return 'bg-blue-500';
+        return 'pull';
       case 'legs':
-        return 'bg-green-500';
+        return 'legs';
       default:
-        return 'bg-gray-500';
+        return 'general';
     }
   };
 
-  const getDayTypeIcon = (dayType: string) => {
-    // No usar emojis, retornar null o un icono SVG si se desea
-    return null;
-  };
-
   const getStatusColor = (completed: boolean, inProgress: boolean) => {
-    if (completed) return 'bg-green-900 text-green-300';
-    if (inProgress) return 'bg-yellow-900 text-yellow-300';
-    return 'bg-gray-900 text-gray-300';
+    if (completed) return 'completed';
+    if (inProgress) return 'in-progress';
+    return 'not-started';
   };
 
   const getStatusText = (completed: boolean, inProgress: boolean) => {
-    if (completed) return 'Completed';
-    if (inProgress) return 'In Progress';
-    return 'Not Started';
+    if (completed) return 'COMPLETED';
+    if (inProgress) return 'IN PROGRESS';
+    return 'NOT STARTED';
+  };
+
+  const getStatusIcon = (completed: boolean, inProgress: boolean) => {
+    if (completed) return <CheckIcon />;
+    if (inProgress) return <ClockIcon />;
+    return <XMarkIcon />;
   };
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-700 rounded-lg mb-4"></div>
-          <div className="h-64 bg-gray-700 rounded-lg"></div>
+      <div className="workout-detail-page">
+        <div className="loading-state">
+          <div className="loading-skeleton" style={{ height: '80px' }}></div>
+          <div className="loading-skeleton" style={{ height: '200px' }}></div>
+          <div className="loading-skeleton" style={{ height: '400px' }}></div>
         </div>
       </div>
     );
@@ -103,105 +148,100 @@ const WorkoutDetailPage: React.FC = () => {
 
   if (error || !workout) {
     return (
-      <div className="text-center py-12">
-        <div className="text-6xl mb-4">
-          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="24" cy="24" r="22" stroke="#ff4444" strokeWidth="4" fill="none" />
-            <line x1="16" y1="16" x2="32" y2="32" stroke="#ff4444" strokeWidth="4" />
-            <line x1="32" y1="16" x2="16" y2="32" stroke="#ff4444" strokeWidth="4" />
-          </svg>
+      <div className="workout-detail-page">
+        <div className="error-state">
+          <ErrorIcon />
+          <h3 className="error-title">WORKOUT NOT FOUND</h3>
+          <p className="error-message">
+            The workout you're looking for doesn't exist or has been deleted.
+          </p>
+          <Link to="/workout-history" className="retry-button">
+            <ArrowLeftIcon />
+            BACK TO HISTORY
+          </Link>
         </div>
-        <h3 className="text-lg font-medium text-white mb-2">Workout not found</h3>
-        <p className="text-gray-400 mb-4">
-          The workout you're looking for doesn't exist or has been deleted.
-        </p>
-        <Link
-          to="/workout/history"
-          className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
-        >
-          Back to History
-        </Link>
       </div>
     );
   }
 
+  const totalSets = workout.exercises.length;
+  const completedSets = workout.exercises.filter(ex => ex.completed).length;
+  const totalVolume = workout.exercises.reduce((sum, ex) => sum + (ex.weight * ex.reps), 0);
+
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center space-x-4">
+    <div className="workout-detail-page">
+      {/* Enhanced Header */}
+      <div className="workout-detail-header">
         <button
           onClick={() => navigate(-1)}
-          className="p-2 text-gray-400 hover:text-white transition-colors"
+          className="back-btn"
+          title="Go back"
         >
           <ArrowLeftIcon />
         </button>
-        <div className="flex items-center space-x-3">
-          <div className={`w-4 h-4 rounded-full ${getDayTypeColor(workout.day_type)}`}></div>
-          <h1 className="text-2xl font-bold text-white">
-            {workout.day_type} Workout
+        
+        <div className="workout-title-section">
+          <div className={`day-type-indicator ${getDayTypeColor(workout.day_type)}`}></div>
+          <h1 className="workout-title">
+            {workout.day_type.toUpperCase()} WORKOUT
           </h1>
         </div>
       </div>
 
-      {/* Workout Info */}
-      <div className="bg-gray-800 rounded-lg p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <div className="flex items-center space-x-3">
-            <CalendarIcon />
-            <div>
-              <p className="text-sm text-gray-400">Date</p>
-              <p className="font-medium text-white">
-                {formatDate(workout.date)}
-              </p>
-            </div>
-          </div>
+      {/* Workout Info Section - GRID LAYOUT */}
+      <div className="workout-info-section">
+        <div className="workout-info-item">
+          <div className="workout-info-label">DATE</div>
+          <div className="workout-info-value">{formatDate(workout.date)}</div>
+        </div>
 
-          <div className="flex items-center space-x-3">
-            <ClockIcon />
-            <div>
-              <p className="text-sm text-gray-400">Status</p>
-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(workout.completed, workout.in_progress)}`}>
-                {getStatusText(workout.completed, workout.in_progress)}
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center space-x-3">
-            <CheckIcon />
-            <div>
-              <p className="text-sm text-gray-400">Exercises</p>
-              <p className="font-medium text-white">{workout.exercises.length}</p>
-            </div>
-          </div>
-
-          <div className="flex items-center space-x-3">
-            <div className="h-5 w-5 text-gray-400"></div>
-            <div>
-              <p className="text-sm text-gray-400">Total Sets</p>
-              <p className="font-medium text-white">
-                {workout.exercises.reduce((sum, ex) => sum + 1, 0)}
-              </p>
-            </div>
+        <div className="workout-info-item">
+          <div className="workout-info-label">STATUS</div>
+          <div className={`workout-info-value ${getStatusColor(workout.completed, workout.in_progress)}`}>
+            {getStatusText(workout.completed, workout.in_progress)}
           </div>
         </div>
 
-        {/* Notes */}
-        {workout.notes && (
-          <div className="border-t border-gray-700 pt-4">
-            <h3 className="text-sm font-medium text-gray-400 mb-2">Notes</h3>
-            <p className="text-white">{workout.notes}</p>
-          </div>
-        )}
+        <div className="workout-info-item">
+          <div className="workout-info-label">EXERCISES</div>
+          <div className="workout-info-value total">{workout.exercises.length}</div>
+        </div>
+
+        <div className="workout-info-item">
+          <div className="workout-info-label">TOTAL SETS</div>
+          <div className="workout-info-value total">{totalSets}</div>
+        </div>
+
+        <div className="workout-info-item">
+          <div className="workout-info-label">COMPLETED</div>
+          <div className="workout-info-value completed">{completedSets}/{totalSets}</div>
+        </div>
+
+        <div className="workout-info-item">
+          <div className="workout-info-label">TOTAL VOLUME</div>
+          <div className="workout-info-value total">{totalVolume.toLocaleString()} kg</div>
+        </div>
       </div>
 
-      {/* Exercises */}
-      <div className="bg-gray-800 rounded-lg p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-white">Exercises</h2>
-          <div className="flex items-center space-x-2">
+      {/* Notes */}
+      {workout.notes && (
+        <div className="notes-section">
+          <div className="notes-label">
+            <NotesIcon />
+            NOTES
+          </div>
+          <div className="notes-content">{workout.notes}</div>
+        </div>
+      )}
+
+      {/* Exercises Section */}
+      <div className="exercises-section">
+        <div className="exercises-header">
+          <h2 className="exercises-title">EXERCISES</h2>
+          <div className="exercises-actions">
             <button
               onClick={() => navigate(`/workout/${workout.id}/edit`)}
-              className="p-2 text-gray-400 hover:text-blue-400 transition-colors"
+              className="action-btn edit"
               title="Edit workout"
             >
               <PencilIcon />
@@ -212,7 +252,7 @@ const WorkoutDetailPage: React.FC = () => {
                   // Handle delete
                 }
               }}
-              className="p-2 text-gray-400 hover:text-red-400 transition-colors"
+              className="action-btn delete"
               title="Delete workout"
             >
               <TrashIcon />
@@ -220,50 +260,84 @@ const WorkoutDetailPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="space-y-4">
+        <div className="exercises-grid">
           {workout.exercises.length > 0 ? (
-            workout.exercises.map((exercise, index) => (
-              <div key={exercise.id} className="bg-gray-700 rounded-lg p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-medium text-white">{exercise.name}</h3>
-                  <div className="flex items-center space-x-2">
-                    {exercise.completed ? (
-                      <CheckIcon />
-                    ) : (
-                      <XMarkIcon />
-                    )}
+            // Group exercises by name and show all sets for each exercise
+            Object.entries(
+              workout.exercises.reduce((acc, exercise) => {
+                if (!acc[exercise.name]) {
+                  acc[exercise.name] = [];
+                }
+                acc[exercise.name].push(exercise);
+                return acc;
+              }, {} as Record<string, typeof workout.exercises>)
+            ).map(([exerciseName, sets]) => {
+              const totalSets = sets.length;
+              const completedSets = sets.filter(set => set.completed).length;
+              const isCompleted = completedSets === totalSets;
+              
+              return (
+                <div 
+                  key={exerciseName} 
+                  className={`exercise-card ${isCompleted ? 'completed' : ''}`}
+                >
+                  <div className="exercise-header">
+                    <h3 className="exercise-name">{exerciseName}</h3>
+                    <div className={`exercise-category ${isCompleted ? 'completed' : 'incomplete'}`}>
+                      {isCompleted ? 'COMPLETED' : `${completedSets}/${totalSets} SETS`}
+                    </div>
                   </div>
-                </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                  <div>
-                    <p className="text-gray-400">Weight</p>
-                    <p className="font-medium text-white">{exercise.weight} kg</p>
+                  <div className="sets-grid">
+                    {sets.map((set, index) => (
+                      <div 
+                        key={set.id} 
+                        className={`set-item ${set.completed ? 'completed' : ''}`}
+                      >
+                        <div className="set-number">SET {set.set_number}</div>
+                        <div className="set-weight">{set.weight}kg</div>
+                        <div className="set-reps">{set.reps} reps</div>
+                        {set.rpe && (
+                          <div className="set-rpe">RPE {set.rpe}</div>
+                        )}
+                        <div className={`set-status ${set.completed ? 'completed' : 'pending'}`}>
+                          {set.completed ? 'COMPLETED' : 'PENDING'}
+                        </div>
+                        {set.notes && (
+                          <div className="set-notes">
+                            <NotesIcon />
+                            <span>{set.notes}</span>
+                          </div>
+                        )}
+                      </div>
+                    ))}
                   </div>
-                  <div>
-                    <p className="text-gray-400">Reps</p>
-                    <p className="font-medium text-white">{exercise.reps}</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-400">Set</p>
-                    <p className="font-medium text-white">{exercise.set_number}</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-400">RPE</p>
-                    <p className="font-medium text-white">{exercise.rpe || 'N/A'}</p>
-                  </div>
-                </div>
 
-                {exercise.notes && (
-                  <div className="mt-3 pt-3 border-t border-gray-600">
-                    <p className="text-sm text-gray-400">{exercise.notes}</p>
-                  </div>
-                )}
-              </div>
-            ))
+                  {/* Exercise-level notes if any */}
+                  {sets.some(set => set.notes) && (
+                    <div className="exercise-notes">
+                      <div className="exercise-notes-label">
+                        <NotesIcon />
+                        EXERCISE NOTES
+                      </div>
+                      <div className="exercise-notes-content">
+                        {sets
+                          .filter(set => set.notes)
+                          .map(set => set.notes)
+                          .join(' | ')}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })
           ) : (
-            <div className="text-center py-8">
-              <p className="text-gray-400">No exercises found for this workout.</p>
+            <div className="error-state">
+              <ExerciseIcon />
+              <h3 className="error-title">NO EXERCISES FOUND</h3>
+              <p className="error-message">
+                This workout doesn't have any exercises recorded.
+              </p>
             </div>
           )}
         </div>

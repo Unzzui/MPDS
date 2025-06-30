@@ -110,12 +110,13 @@ export interface WorkoutSummary {
 }
 
 export interface WorkoutProgress {
-  workout_id?: number;
-  date: string;
-  day_type: string;
-  in_progress: boolean;
-  completed: boolean;
-  exercises: ExerciseCreate[];
+  current_exercise_index: number;
+  current_set_index: number;
+  completed_exercises: number;
+  total_exercises: number;
+  completed_sets: number;
+  total_sets: number;
+  session_duration: number;
 }
 
 // Training Block types
@@ -397,5 +398,139 @@ export interface RoutineExerciseUpdate {
   weight_percentage?: number;
   rest_time?: number;
   is_main_lift?: boolean;
+  notes?: string;
+}
+
+// Intelligent Logging System Types
+export interface WorkoutSession {
+  id: string;
+  user_id: number;
+  routine_id?: number;
+  date: string;
+  start_time: string;
+  end_time?: string;
+  status: 'not_started' | 'in_progress' | 'completed' | 'paused';
+  total_duration?: number;
+  notes?: string;
+  context_rating?: ContextRating;
+  exercises: WorkoutSessionExercise[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface WorkoutSessionExercise {
+  id: string;
+  session_id: string;
+  exercise_name: string;
+  original_exercise_name?: string; // For substitutions
+  order: number;
+  is_main_lift: boolean;
+  target_sets: number;
+  target_reps: string;
+  target_weight?: number;
+  target_weight_percentage?: number;
+  rest_time?: number;
+  status: 'pending' | 'in_progress' | 'completed' | 'skipped';
+  sets: WorkoutSessionSet[];
+  start_time?: string;
+  end_time?: string;
+  duration?: number;
+  substitution_reason?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface WorkoutSessionSet {
+  id: string;
+  exercise_id: string;
+  set_number: number;
+  target_weight: number;
+  target_reps: number;
+  actual_weight?: number;
+  actual_reps?: number;
+  rpe?: number;
+  inferred_rpe?: number;
+  status: 'pending' | 'completed' | 'failed' | 'skipped';
+  start_time?: string;
+  end_time?: string;
+  rest_duration?: number; // Time since previous set
+  failure_reps?: number; // How many reps were attempted but failed
+  notes?: string;
+  created_at: string;
+}
+
+export interface ContextRating {
+  session_id: string;
+  question_type: 'energy' | 'difficulty' | 'sleep' | 'stress';
+  rating: string;
+  timestamp: string;
+}
+
+export interface ExerciseSubstitution {
+  id: number;
+  user_id: number;
+  original_exercise: string;
+  substitute_exercise: string;
+  frequency: number; // How often this substitution is made
+  last_used: string;
+  created_at: string;
+}
+
+export interface WorkoutTimer {
+  is_active: boolean;
+  start_time?: number;
+  current_time: number;
+  target_rest_time?: number;
+  exercise_name?: string;
+  set_number?: number;
+}
+
+export interface RpeInference {
+  completed_reps: number;
+  target_reps: number;
+  failure_reps: number;
+  inferred_rpe: number;
+  confidence: 'low' | 'medium' | 'high';
+  reasoning: string;
+}
+
+export interface QuickAddExercise {
+  name: string;
+  category: string;
+  muscle_groups: string[];
+  is_compound: boolean;
+  equipment_needed: string[];
+}
+
+export interface WorkoutSessionCreate {
+  routine_id?: number;
+  date: string;
+  exercises: WorkoutSessionExerciseCreate[];
+}
+
+export interface WorkoutSessionExerciseCreate {
+  exercise_name: string;
+  order: number;
+  is_main_lift: boolean;
+  target_sets: number;
+  target_reps: string;
+  target_weight?: number;
+  target_weight_percentage?: number;
+  rest_time?: number;
+}
+
+export interface WorkoutSessionSetCreate {
+  exercise_id: string;
+  set_number: number;
+  target_weight: number;
+  target_reps: number;
+}
+
+export interface WorkoutSessionSetUpdate {
+  actual_weight?: number;
+  actual_reps?: number;
+  rpe?: number;
+  status: 'completed' | 'failed' | 'skipped';
+  failure_reps?: number;
   notes?: string;
 } 

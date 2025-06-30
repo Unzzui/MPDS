@@ -63,7 +63,9 @@ def get_user_by_username(db: Session, username: str) -> Optional[User]:
 
 
 def create_user(db: Session, user: UserCreate) -> User:
-    """Create a new user"""
+    """Create a new user with adaptive profile initialization"""
+    from app.services.user_adaptation import UserAdaptationService
+    
     hashed_password = get_password_hash(user.password)
     db_user = User(
         username=user.username,
@@ -73,4 +75,23 @@ def create_user(db: Session, user: UserCreate) -> User:
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
+    
+    # Initialize adaptive profile for new user
+    try:
+        adaptation_service = UserAdaptationService(db)
+        adaptation_service.get_or_create_user_profile(db_user.id)
+        
+        # Track user registration as first interaction
+        adaptation_service.track_user_interaction(
+            user_id=db_user.id,
+            interaction_type="user_registration",
+            interaction_data={
+                "registration_date": datetime.utcnow().isoformat(),
+                "initial_setup": True
+            }
+        )
+    except Exception as e:
+        # Don't fail user creation if profile creation fails
+        print(f"Warning: Failed to create adaptive profile for user {db_user.id}: {e}")
+    
     return db_user 

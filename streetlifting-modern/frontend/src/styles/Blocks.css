@@ -25,6 +25,37 @@
   letter-spacing: 2px;
 }
 
+/* Create Block Button */
+.btn-create-block {
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  border: 2px solid var(--accent-primary);
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-create-block:hover {
+  background: var(--accent-secondary);
+  border-color: var(--accent-secondary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
+}
+
+.btn-create-block:active {
+  transform: translateY(0);
+}
+
 /* Loading Section */
 .loading-section {
   display: flex;
@@ -57,7 +88,7 @@
 
 .current-block-section h2 {
   font-size: 1.5rem;
-  color: var(--accent-secondary);
+  color: var(--accent-primary);
   margin-bottom: 1rem;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -66,7 +97,7 @@
 /* Block Cards */
 .block-card {
   background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-primary);
   border-radius: 8px;
   padding: 1.5rem;
   margin-bottom: 1rem;
@@ -93,6 +124,7 @@
 .block-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  border-color: var(--accent-primary);
 }
 
 .block-header {
@@ -178,17 +210,80 @@
   flex-wrap: wrap;
 }
 
-.block-actions .btn-secondary,
-.block-actions .btn-accent,
-.block-actions .btn-danger {
+/* Button Styles - Terminal Modern */
+.btn-secondary {
+  background: transparent;
+  border: 1px solid var(--accent-primary);
+  color: var(--accent-primary);
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
   text-decoration: none;
   border-radius: 4px;
-  transition: all 0.3s ease;
-  border: none;
+  transition: all 0.2s ease;
   cursor: pointer;
   font-family: var(--font-mono);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-secondary:hover {
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
+}
+
+.btn-accent {
+  background: var(--accent-primary);
+  border: 1px solid var(--accent-primary);
+  color: var(--bg-primary);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-accent:hover {
+  background: var(--accent-secondary);
+  border-color: var(--accent-secondary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
+}
+
+.btn-danger {
+  background: transparent;
+  border: 1px solid var(--text-error);
+  color: var(--text-error);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-danger:hover {
+  background: var(--text-error);
+  color: var(--bg-primary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 68, 68, 0.3);
+}
+
+.btn-danger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* All Blocks Section */
@@ -198,7 +293,7 @@
 
 .all-blocks-section h2 {
   font-size: 1.5rem;
-  color: var(--accent-secondary);
+  color: var(--accent-primary);
   margin-bottom: 1.5rem;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -214,15 +309,12 @@
 .empty-state {
   text-align: center;
   padding: 4rem 2rem;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+  color: var(--text-secondary);
 }
 
 .empty-state p {
-  color: var(--text-secondary);
-  margin-bottom: 2rem;
   font-size: 1.1rem;
+  margin-bottom: 2rem;
 }
 
 /* Modal Styles */
@@ -236,32 +328,34 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: var(--z-modal);
   padding: 1rem;
 }
 
 .modal-content {
   background: var(--bg-primary);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--accent-primary);
   border-radius: 8px;
-  max-width: 500px;
-  width: 100%;
+  max-width: 90vw;
   max-height: 90vh;
-  overflow-y: auto;
+  overflow: hidden;
+  box-shadow: 0 0 24px rgba(0, 255, 136, 0.2);
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem;
-  border-bottom: 1px solid var(--border-color);
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--accent-primary);
+  background: var(--bg-secondary);
 }
 
 .modal-header h2 {
   color: var(--accent-primary);
-  margin: 0;
   font-size: 1.25rem;
+  margin: 0;
+  font-weight: 600;
 }
 
 .btn-close {
@@ -270,37 +364,30 @@
   color: var(--text-secondary);
   font-size: 1.5rem;
   cursor: pointer;
-  padding: 0;
-  width: 2rem;
-  height: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  transition: all 0.3s ease;
+  padding: 0.5rem;
+  line-height: 1;
+  transition: color 0.2s ease;
 }
 
 .btn-close:hover {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
+  color: var(--accent-primary);
 }
 
 .modal-body {
-  padding: 1.5rem;
+  padding: 2rem;
 }
 
 .modal-body p {
   color: var(--text-secondary);
   margin-bottom: 1rem;
-  line-height: 1.6;
 }
 
 .modal-footer {
-  padding: 1.5rem;
-  border-top: 1px solid var(--border-color);
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
+  padding: 1.5rem 2rem;
+  border-top: 1px solid var(--border-primary);
 }
 
 /* Responsive Design */
@@ -308,41 +395,41 @@
   .blocks-container {
     padding: 0.5rem;
   }
-
+  
   .blocks-header {
     flex-direction: column;
     gap: 1rem;
-    align-items: flex-start;
+    text-align: center;
   }
-
+  
   .blocks-header h1 {
     font-size: 1.5rem;
   }
-
+  
   .blocks-grid {
     grid-template-columns: 1fr;
-    gap: 1rem;
   }
-
+  
   .block-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
   }
-
+  
   .block-actions {
+    width: 100%;
     justify-content: center;
   }
-
+  
   .detail-row {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.25rem;
   }
-
+  
   .modal-content {
-    margin: 1rem;
-    max-height: calc(100vh - 2rem);
+    margin: 0.5rem;
+    max-width: 95vw;
   }
 }
 
@@ -350,15 +437,15 @@
   .block-card {
     padding: 1rem;
   }
-
+  
   .block-actions {
     flex-direction: column;
   }
-
+  
   .block-actions .btn-secondary,
   .block-actions .btn-accent,
   .block-actions .btn-danger {
     width: 100%;
-    text-align: center;
+    justify-content: center;
   }
 } 

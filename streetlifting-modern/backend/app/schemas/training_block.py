@@ -25,6 +25,7 @@ class BlockStage(BlockStageBase):
 
 class TrainingBlockBase(BaseModel):
     name: str = Field(..., min_length=1, max_length=255)
+    description: Optional[str] = None
     duration: int = Field(..., ge=1, le=52)
     total_weeks: int = Field(..., ge=1, le=52)
     current_stage: str = Field(..., min_length=1, max_length=100)
@@ -38,8 +39,28 @@ class TrainingBlockBase(BaseModel):
     strategy: str = Field(..., min_length=1, max_length=100)
     weekly_increment: float = Field(..., ge=0)
     deload_week: Optional[int] = Field(None, ge=1, le=52)
-    routines_by_day: Optional[str] = None  # JSON string
+    routines_by_day: Optional[Dict[str, str]] = None  # Daily workout structure
     increment_type: str = Field(default="percentage", pattern="^(percentage|absolute)$")
+    training_maxes: Optional[Dict[str, float]] = None  # Training maxes for exercises
+    # Campos específicos de estrategias
+    auto_progression: Optional[bool] = True
+    # Campos para block_periodization
+    volume_multiplier: Optional[float] = 1.0
+    intensity_focus: Optional[str] = "moderate"
+    # Campos para dub_progression
+    daily_variation: Optional[str] = "intensity"
+    intensity_range: Optional[str] = "70-90"
+    volume_cycles: Optional[int] = 3
+    # Campos para conjugate
+    max_effort_days: Optional[int] = 1
+    dynamic_effort_days: Optional[int] = 1
+    repetition_effort_days: Optional[int] = 1
+    # Campos para wave_loading
+    wave_pattern: Optional[str] = "ascending"
+    wave_amplitude: Optional[int] = 10
+    wave_frequency: Optional[str] = "weekly"
+    # Campos de max reps
+    max_reps: Optional[Dict[str, int]] = None
 
 
 class TrainingBlockCreate(TrainingBlockBase):
@@ -63,8 +84,9 @@ class TrainingBlockUpdate(BaseModel):
     deload_week: Optional[int] = Field(None, ge=1, le=52)
     is_active: Optional[bool] = None
     status: Optional[str] = Field(None, pattern="^(planned|in_progress|completed)$")
-    routines_by_day: Optional[str] = None
+    routines_by_day: Optional[Dict[str, str]] = None
     increment_type: Optional[str] = Field(None, pattern="^(percentage|absolute)$")
+    training_maxes: Optional[Dict[str, float]] = None
 
 
 class TrainingBlock(TrainingBlockBase):

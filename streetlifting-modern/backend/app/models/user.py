@@ -19,4 +19,5 @@ class User(Base):
     training_blocks = relationship("TrainingBlock", back_populates="user", cascade="all, delete-orphan")
     workouts = relationship("Workout", back_populates="user", cascade="all, delete-orphan")
     one_rep_maxes = relationship("OneRepMax", back_populates="user", cascade="all, delete-orphan")
-    routines = relationship("Routine", back_populates="user", cascade="all, delete-orphan") 
+    routines = relationship("Routine", back_populates="user", cascade="all, delete-orphan")
+    profile = relationship("UserProfile", back_populates="user", cascade="all, delete-orphan", uselist=False) 

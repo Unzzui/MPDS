@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useRoutines } from '../hooks/useRoutines';
 import { useNavigate } from 'react-router-dom';
 import type { RoutineSummary, RoutineTemplate } from '../types';
+import ExerciseSelector from '../components/ExerciseSelector';
 import '../styles/Routines.css';
 
 const RoutinesPage: React.FC = () => {
@@ -64,7 +65,7 @@ const RoutinesPage: React.FC = () => {
   };
 
   const handleDeleteRoutine = (id: number) => {
-    if (window.confirm('Are you sure you want to delete this routine?')) {
+    if (window.confirm('¿Estás seguro de que quieres eliminar esta rutina?')) {
       deleteRoutine(id);
     }
   };
@@ -91,7 +92,7 @@ const RoutinesPage: React.FC = () => {
       <div className="routines-container">
         <div className="loading-section">
           <div className="loading-spinner"></div>
-          <p>Loading routines...</p>
+          <p>Cargando rutinas...</p>
         </div>
       </div>
     );
@@ -104,13 +105,13 @@ const RoutinesPage: React.FC = () => {
     return (
       <div className="routines-container">
         <div className="empty-state">
-          <h3>Error Loading Routines</h3>
-          <p>There was an error loading your routines. Please try again later.</p>
+          <h3>Error al Cargar Rutinas</h3>
+          <p>Hubo un error al cargar tus rutinas. Por favor, inténtalo de nuevo más tarde.</p>
           <div className="error-details">
             <p><strong>Error:</strong> {String(error)}</p>
           </div>
           <button className="btn-primary" onClick={() => window.location.reload()}>
-            Retry
+            Reintentar
           </button>
         </div>
       </div>
@@ -121,28 +122,31 @@ const RoutinesPage: React.FC = () => {
     <div className="routines-container">
       {/* Header */}
       <div className="routines-header">
-        <h1>Routines</h1>
+        <h1>Rutinas</h1>
         <div>
           <button 
             className="btn-secondary" 
             onClick={() => setShowTemplateModal(true)}
             style={{ marginRight: '1rem' }}
           >
-            From Template
+            Desde Plantilla
           </button>
-          <button className="btn-primary" onClick={() => setShowCreateModal(true)}>
-            Create Routine
+          <button className="btn-create-routine" onClick={() => setShowCreateModal(true)}>
+            + Crear Rutina
           </button>
         </div>
       </div>
 
       {/* Active Routines Section */}
       <div className="active-routines-section">
-        <h2>Active Routines ({activeRoutines.length})</h2>
+        <h2>Rutinas Activas ({activeRoutines.length})</h2>
         {activeRoutines.length === 0 ? (
           <div className="empty-state">
-            <h3>No Active Routines</h3>
-            <p>Create a routine or activate an existing one to get started.</p>
+            <h3>No Hay Rutinas Activas</h3>
+            <p>Crea una rutina o activa una existente para comenzar.</p>
+            <button className="btn-create-routine" onClick={() => setShowCreateModal(true)}>
+              + Crear Primera Rutina
+            </button>
           </div>
         ) : (
           activeRoutines.map((routine) => (
@@ -160,11 +164,14 @@ const RoutinesPage: React.FC = () => {
 
       {/* All Routines Section */}
       <div className="routines-section">
-        <h2>All Routines ({routines.length})</h2>
+        <h2>Todas las Rutinas ({routines.length})</h2>
         {routines.length === 0 ? (
           <div className="empty-state">
-            <h3>No Routines Found</h3>
-            <p>Create your first routine to start tracking your workouts.</p>
+            <h3>No Se Encontraron Rutinas</h3>
+            <p>Crea tu primera rutina para comenzar a rastrear tus entrenamientos.</p>
+            <button className="btn-create-routine" onClick={() => setShowCreateModal(true)}>
+              + Crear Primera Rutina
+            </button>
           </div>
         ) : (
           routines.map((routine) => (
@@ -182,11 +189,11 @@ const RoutinesPage: React.FC = () => {
 
       {/* Templates Section */}
       <div className="templates-section">
-        <h2>Routine Templates ({templates.length})</h2>
+        <h2>Plantillas de Rutinas ({templates.length})</h2>
         {templates.length === 0 ? (
           <div className="empty-state">
-            <h3>No Templates Available</h3>
-            <p>No routine templates are currently available.</p>
+            <h3>No Hay Plantillas Disponibles</h3>
+            <p>No hay plantillas de rutinas disponibles actualmente.</p>
           </div>
         ) : (
           templates.map((template) => (
@@ -195,7 +202,7 @@ const RoutinesPage: React.FC = () => {
               template={template}
               onCreateFromTemplate={() => {
                 setSelectedTemplate(template);
-                setTemplateName(`${template.name} Copy`);
+                setTemplateName(`${template.name} Copia`);
                 setShowTemplateModal(true);
               }}
             />
@@ -264,7 +271,7 @@ const RoutineCard: React.FC<RoutineCardProps> = ({
             onClick={() => navigate(`/routines/${routine.id}`)}
             disabled={isLoading}
           >
-            View
+            Ver
           </button>
           {!isActive && (
             <button
@@ -272,7 +279,7 @@ const RoutineCard: React.FC<RoutineCardProps> = ({
               onClick={() => onActivate(routine.id)}
               disabled={isLoading}
             >
-              Activate
+              Activar
             </button>
           )}
           <button
@@ -280,30 +287,30 @@ const RoutineCard: React.FC<RoutineCardProps> = ({
             onClick={() => onDelete(routine.id)}
             disabled={isLoading}
           >
-            Delete
+            Eliminar
           </button>
         </div>
       </div>
 
       <div className="routine-stats">
         <div className="stat-item">
-          <div className="stat-label">Exercises</div>
+          <div className="stat-label">Ejercicios</div>
           <div className="stat-value">{routine.exercise_count}</div>
         </div>
         <div className="stat-item">
-          <div className="stat-label">Days</div>
+          <div className="stat-label">Días</div>
           <div className="stat-value">{routine.day_count}</div>
         </div>
         <div className="stat-item">
-          <div className="stat-label">Status</div>
-          <div className="stat-value">{isActive ? 'Active' : 'Inactive'}</div>
+          <div className="stat-label">Estado</div>
+          <div className="stat-value">{isActive ? 'Activa' : 'Inactiva'}</div>
         </div>
       </div>
 
       <div className="routine-days">
         {routine.day_count > 0 && (
           <span className="day-badge">
-            {routine.day_count} day{routine.day_count !== 1 ? 's' : ''}
+            {routine.day_count} día{routine.day_count !== 1 ? 's' : ''}
           </span>
         )}
       </div>
@@ -318,11 +325,11 @@ interface TemplateCardProps {
 }
 
 const TemplateCard: React.FC<TemplateCardProps> = ({ template, onCreateFromTemplate }) => {
-  const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const dayNames = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
   return (
     <div className="template-card">
-      <div className="template-badge">Template</div>
+      <div className="template-badge">Plantilla</div>
       <div className="routine-header">
         <div>
           <div className="routine-title">{template.name}</div>
@@ -332,22 +339,22 @@ const TemplateCard: React.FC<TemplateCardProps> = ({ template, onCreateFromTempl
         </div>
         <div className="routine-actions">
           <button className="btn-primary" onClick={onCreateFromTemplate}>
-            Use Template
+            Usar Plantilla
           </button>
         </div>
       </div>
 
       <div className="routine-stats">
         <div className="stat-item">
-          <div className="stat-label">Exercises</div>
+          <div className="stat-label">Ejercicios</div>
           <div className="stat-value">{template.exercises.length}</div>
         </div>
         <div className="stat-item">
-          <div className="stat-label">Days</div>
+          <div className="stat-label">Días</div>
           <div className="stat-value">{template.days.length}</div>
         </div>
         <div className="stat-item">
-          <div className="stat-label">Main Lifts</div>
+          <div className="stat-label">Lifts Principales</div>
           <div className="stat-value">{template.main_lifts.length}</div>
         </div>
       </div>
@@ -393,9 +400,17 @@ const CreateRoutineModal: React.FC<CreateRoutineModalProps> = ({
   onSubmit,
   isLoading,
 }) => {
+  const [selectedExercises, setSelectedExercises] = useState<string[]>([]);
+  const [selectedMainLifts, setSelectedMainLifts] = useState<string[]>([]);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
+    
+    // Agregar ejercicios y lifts principales desde el estado
+    formData.set('exercises', selectedExercises.join(','));
+    formData.set('main_lifts', selectedMainLifts.join(','));
+    
     onSubmit(formData);
   };
 
@@ -403,61 +418,53 @@ const CreateRoutineModal: React.FC<CreateRoutineModalProps> = ({
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>Create New Routine</h2>
+          <h2>Crear Nueva Rutina</h2>
           <button className="btn-close" onClick={onClose}>&times;</button>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="modal-body">
             <div className="form-group">
-              <label className="form-label" htmlFor="name">Routine Name</label>
+              <label className="form-label" htmlFor="name">Nombre de la Rutina</label>
               <input
                 type="text"
                 id="name"
                 name="name"
                 className="form-input"
                 required
-                placeholder="Enter routine name"
+                placeholder="Ingresa el nombre de la rutina"
               />
             </div>
 
             <div className="form-group">
-              <label className="form-label" htmlFor="description">Description</label>
+              <label className="form-label" htmlFor="description">Descripción</label>
               <textarea
                 id="description"
                 name="description"
                 className="form-input form-textarea"
-                placeholder="Optional description"
+                placeholder="Descripción opcional"
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label" htmlFor="exercises">Exercises</label>
-              <input
-                type="text"
-                id="exercises"
-                name="exercises"
-                className="form-input"
-                required
-                placeholder="Pull-ups, Dips, Muscle-ups (comma separated)"
-              />
-            </div>
+            <ExerciseSelector
+              selectedExercises={selectedExercises}
+              onExercisesChange={setSelectedExercises}
+              label="Ejercicios"
+              placeholder="Busca y selecciona ejercicios"
+              required={true}
+            />
+
+            <ExerciseSelector
+              selectedExercises={selectedMainLifts}
+              onExercisesChange={setSelectedMainLifts}
+              label="Lifts Principales"
+              placeholder="Selecciona los ejercicios principales"
+              required={true}
+            />
 
             <div className="form-group">
-              <label className="form-label" htmlFor="main_lifts">Main Lifts</label>
-              <input
-                type="text"
-                id="main_lifts"
-                name="main_lifts"
-                className="form-input"
-                required
-                placeholder="Pull-ups, Dips (comma separated)"
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Training Days</label>
+              <label className="form-label">Días de Entrenamiento</label>
               <div className="checkbox-group">
-                {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day, index) => (
+                {['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'].map((day, index) => (
                   <div key={day} className="checkbox-item">
                     <input
                       type="checkbox"
@@ -483,17 +490,17 @@ const CreateRoutineModal: React.FC<CreateRoutineModalProps> = ({
                   className="checkbox-input"
                 />
                 <label htmlFor="is_active" className="checkbox-label">
-                  Activate this routine immediately
+                  Activar esta rutina inmediatamente
                 </label>
               </div>
             </div>
           </div>
           <div className="modal-footer">
             <button type="button" className="btn-secondary" onClick={onClose}>
-              Cancel
+              Cancelar
             </button>
             <button type="submit" className="btn-primary" disabled={isLoading}>
-              {isLoading ? 'Creating...' : 'Create Routine'}
+              {isLoading ? 'Creando...' : 'Crear Rutina'}
             </button>
           </div>
         </form>
@@ -524,36 +531,36 @@ const CreateFromTemplateModal: React.FC<CreateFromTemplateModalProps> = ({
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>Create from Template</h2>
+          <h2>Crear desde Plantilla</h2>
           <button className="btn-close" onClick={onClose}>&times;</button>
         </div>
         <div className="modal-body">
           <div className="form-group">
-            <label className="form-label" htmlFor="template-name">Routine Name</label>
+            <label className="form-label" htmlFor="template-name">Nombre de la Rutina</label>
             <input
               type="text"
               id="template-name"
               className="form-input"
               value={name}
               onChange={(e) => onNameChange(e.target.value)}
-              placeholder="Enter routine name"
+              placeholder="Ingresa el nombre de la rutina"
               required
             />
           </div>
 
           <div className="form-group">
-            <label className="form-label">Template Details</label>
+            <label className="form-label">Detalles de la Plantilla</label>
             <div className="routine-stats">
               <div className="stat-item">
-                <div className="stat-label">Exercises</div>
+                <div className="stat-label">Ejercicios</div>
                 <div className="stat-value">{template.exercises.length}</div>
               </div>
               <div className="stat-item">
-                <div className="stat-label">Days</div>
+                <div className="stat-label">Días</div>
                 <div className="stat-value">{template.days.length}</div>
               </div>
               <div className="stat-item">
-                <div className="stat-label">Main Lifts</div>
+                <div className="stat-label">Lifts Principales</div>
                 <div className="stat-value">{template.main_lifts.length}</div>
               </div>
             </div>
@@ -561,7 +568,7 @@ const CreateFromTemplateModal: React.FC<CreateFromTemplateModalProps> = ({
 
           {template.description && (
             <div className="form-group">
-              <label className="form-label">Description</label>
+              <label className="form-label">Descripción</label>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
                 {template.description}
               </p>
@@ -570,7 +577,7 @@ const CreateFromTemplateModal: React.FC<CreateFromTemplateModalProps> = ({
         </div>
         <div className="modal-footer">
           <button type="button" className="btn-secondary" onClick={onClose}>
-            Cancel
+            Cancelar
           </button>
           <button
             type="button"
@@ -578,7 +585,7 @@ const CreateFromTemplateModal: React.FC<CreateFromTemplateModalProps> = ({
             onClick={onSubmit}
             disabled={isLoading || !name.trim()}
           >
-            {isLoading ? 'Creating...' : 'Create Routine'}
+            {isLoading ? 'Creando...' : 'Crear Rutina'}
           </button>
         </div>
       </div>

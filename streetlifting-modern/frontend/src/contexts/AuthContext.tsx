@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -34,6 +34,10 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  
+  // Add state to track authentication status reactively
+  const [isAuthenticated, setIsAuthenticated] = useState(() => apiService.isAuthenticated());
+  const [hasNavigatedAfterLogin, setHasNavigatedAfterLogin] = useState(false);
 
   // Get current user
   const { data: user, isLoading: isLoadingUser } = useQuery({
@@ -44,9 +48,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.log('User data received:', userData);
       return userData;
     },
-    enabled: apiService.isAuthenticated(),
+    enabled: isAuthenticated,
     retry: false,
   });
+
+  // Navigate to dashboard after successful login and user data load
+  useEffect(() => {
+    if (isAuthenticated && user && !isLoadingUser && !hasNavigatedAfterLogin) {
+      console.log('User authenticated and loaded, navigating to dashboard...');
+      setHasNavigatedAfterLogin(true);
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, user, isLoadingUser, hasNavigatedAfterLogin, navigate]);
 
   // Login mutation
   const loginMutation = useMutation({
@@ -55,10 +68,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.log('Login successful, data:', data);
       apiService.setAuthToken(data.access_token);
       console.log('Token set in localStorage');
+      setIsAuthenticated(true); // Update authentication state
       queryClient.invalidateQueries({ queryKey: ['user'] });
-      console.log('User query invalidated, navigating to dashboard');
-      navigate('/dashboard');
-      console.log('Navigation called');
+      console.log('User query invalidated, waiting for user data to check setup...');
+      // Don't navigate here - let the useEffect handle navigation based on setup needs
     },
     onError: (error) => {
       console.error('Login error:', error);
@@ -79,6 +92,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Logout function
   const logout = () => {
     apiService.removeAuthToken();
+    setIsAuthenticated(false); // Update authentication state
+    setHasNavigatedAfterLogin(false); // Reset navigation state
     queryClient.clear();
     navigate('/login');
   };
@@ -88,7 +103,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     token: apiService.getAuthToken(),
     error: null,
     isLoading: loginMutation.isPending || registerMutation.isPending,
-    isAuthenticated: apiService.isAuthenticated(),
+    isAuthenticated,
     isLoadingUser,
     login: loginMutation.mutate,
     register: registerMutation.mutate,

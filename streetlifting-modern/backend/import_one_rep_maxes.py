@@ -65,7 +65,7 @@ def import_one_rep_maxes():
             print("\n📈 Importing initial data...")
             exercises = [
                 ('pull_up_rm', 'Pull Up'),
-                ('dip_rm', 'Dip'),
+                ('dip_rm', 'Dips'),
                 ('squat_rm', 'Squat'),
                 ('muscle_up_rm', 'Muscle Up')
             ]

@@ -58,6 +58,15 @@ export const useBlocks = () => {
     },
   });
 
+  // Activate block mutation
+  const activateBlockMutation = useMutation({
+    mutationFn: apiService.activateBlock,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['blocks'] });
+      queryClient.invalidateQueries({ queryKey: ['blocks', 'current'] });
+    },
+  });
+
   return {
     // Data
     blocks,
@@ -75,16 +84,19 @@ export const useBlocks = () => {
     createBlock: createBlockMutation.mutate,
     updateBlock: updateBlockMutation.mutate,
     deleteBlock: deleteBlockMutation.mutate,
+    activateBlock: activateBlockMutation.mutate,
     
     // Mutation states
     isCreatingBlock: createBlockMutation.isPending,
     isUpdatingBlock: updateBlockMutation.isPending,
     isDeletingBlock: deleteBlockMutation.isPending,
+    isActivatingBlock: activateBlockMutation.isPending,
     
     // Mutation errors
     createBlockError: createBlockMutation.error,
     updateBlockError: updateBlockMutation.error,
     deleteBlockError: deleteBlockMutation.error,
+    activateBlockError: activateBlockMutation.error,
   };
 };
 
